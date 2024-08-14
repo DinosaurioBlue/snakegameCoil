@@ -1,6 +1,8 @@
 #ifndef SNAKE_H
 #define SNAKE_
-#include<ncurses.h>
+
+//includes and struct definitions
+#include<ncurses.h> 
 typedef struct {
     const char * user_name;
     int snake_length;
@@ -15,10 +17,13 @@ typedef struct vector
     unsigned int x;
     unsigned int y;
 };
-void game_setup (game_settings * game);
-int game_loop (game_settings * game);
-void kill_game(void);
 
+//function declarations
+void game_setup (game_settings * game);
+int start_game (game_settings * game);
+void kill_game(void);
+void print_borders(int height,int width);
+void print_score(int score, int board_height);
 
 
 
