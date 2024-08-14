@@ -25,32 +25,32 @@ void startGame(void){
 		printw("Press ENTER to start\n");
 		x = getch();
 	}
-	checkPlayer();
+	if(x == '\n'){
+		checkPlayer();
+	}
 }
 	
 void checkPlayer(void){
-	if(x == '\n'){
-		printw("Press 't' to see the scores\n");
-		printw("Press 'l' if you already played\n");
-		printw("Press 's' if you are new here\n");
-		x = getch();
-		
-		if(x == 'l'){
-			login();
-		}
-		else if(x == 's'){
-			signUp();
-		}
-		else if(x == 't'){
-			top_score();		
-		}
-		else{
-			printw("Invalid option, try again\n");
-			refresh();
-			checkPlayer();
-		}	
-
+	printw("Press 't' to see the scores\n");
+	printw("Press 'l' if you already played\n");
+	printw("Press 's' if you are new here\n");
+	x = getch();
+	
+	if(x == 'l'){
+		login();
 	}
+	else if(x == 's'){
+		signUp();
+	}
+	else if(x == 't'){
+		top_score();		
+	}
+	else{
+		printw("Invalid option, try again\n");
+		refresh();
+		checkPlayer();
+	}	
+
 }
 
 
@@ -110,7 +110,7 @@ void signUp(void){
 	*/
 	
 	
-	updateScore(500, player);
+	updateScore(520, player);
 	
 }
 
@@ -150,9 +150,9 @@ void login(void){
 		refresh();
 	}
 	else{
-		printw("User not found. Please sign up\n");
+		printw("User not found. Please, try again\n");
 		refresh();
-		signUp();
+		checkPlayer();
 	}
 	
 	/*
@@ -160,7 +160,7 @@ void login(void){
 	SCORE OF PLAYER
 	*/
 	
-	updateScore(568, player);
+	updateScore(5568, player);
 	
 	
 }
