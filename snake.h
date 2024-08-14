@@ -16,7 +16,7 @@ typedef struct vector
     unsigned int y;
 };
 void game_setup (game_settings * game);
-void game_loop (game_settings * game);
+int game_loop (game_settings * game);
 void kill_game(void);
 
 
