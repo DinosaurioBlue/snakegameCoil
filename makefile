@@ -1,5 +1,5 @@
-snake: main.o snake.o menu.o
-	gcc -Wall -o snake main.o snake.o menu.o -lncurses
+snake: main.o snake.o
+	gcc -Wall -o snake main.o snake.o -lncurses
 
 main.o: main.c snake.h
 	gcc -Wall -c main.c
