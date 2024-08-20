@@ -13,21 +13,24 @@ void start_game(game_settings_t * game){
     static snake_t snake;
     static snake_t * p2snake = &snake;
     InitializeSnake(p2snake,game);
-
+    game->score=0;
 
 
 
 
     //game loop
     while(!game_over){
+        game->score+=1;
         draw(game,p2snake);
         
-        //print_snake(p2snake);
-        
+    
         
         
         refresh();
         napms(100);
+        if(game->score==120){
+            game_over =1;
+        }
     }
     //game over ==1
     clear();
