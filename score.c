@@ -8,6 +8,7 @@
 void updateScore(int score, const char *player){
 	char buffer[200];
 	char *scorePosition;
+	int old_score;
 	unsigned long int position;
 	FILE *pChange = fopen("history.txt", "r+");
 	
@@ -20,11 +21,11 @@ void updateScore(int score, const char *player){
 		if(strstr(buffer, player) != NULL){
 			position = ftell(pChange);
 			scorePosition = strstr(buffer, "SCORE:");
-			
+			sscanf(scorePosition, "%d", old_score);  
 			if(scorePosition){ 
 			//sets the pointer in the right position to change the player's score 
 				fseek(pChange, position - strlen(buffer) + (scorePosition - buffer) + 6, SEEK_SET);
-				if(score > pChange){
+				if(score > old_score){    
 					fprintf(pChange, "%-4d\n", score);
 				}	
 			}
