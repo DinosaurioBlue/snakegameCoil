@@ -1,4 +1,4 @@
-/*signUp function, saves a new username to a file*/
+/*Function that updates a user's score if he got a higher one*/
 
 #include<stdio.h>
 #include<string.h>
@@ -15,16 +15,18 @@ void updateScore(int score, const char *player){
 		perror("Failed to open file");
 	}
 	
-//read each line and if it encounters the name of the player it changes their score to the udated one
+//read each line and if it encounters the name of the player it changes their score to the udated one (only if they got a better one)
 	while(fgets(buffer, sizeof(buffer), pChange) != NULL){
 		if(strstr(buffer, player) != NULL){
 			position = ftell(pChange);
 			scorePosition = strstr(buffer, "SCORE:");
 			
-			if(scorePosition != 0){
+			if(scorePosition){ 
 			//sets the pointer in the right position to change the player's score 
 				fseek(pChange, position - strlen(buffer) + (scorePosition - buffer) + 6, SEEK_SET);
-				fprintf(pChange, "%-4d\n", score);
+				if(score > pChange){
+					fprintf(pChange, "%-4d\n", score);
+				}	
 			}
 		}
 	}
