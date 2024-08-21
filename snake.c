@@ -1,3 +1,4 @@
+
 #include"snake.h"
 /*THIS WORKS AS MAIN GAME LOOP*/
 
