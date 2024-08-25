@@ -6,8 +6,8 @@
 //developing parameters
 #define DEVELOPING 1
 #if DEVELOPING==1
-#define BHEIGHT 8
-#define BWIDTH  8
+#define BHEIGHT 20
+#define BWIDTH  40
 #define HEAD    '@'
 #define BODY    'o'
 #define SIZE    1
@@ -36,6 +36,10 @@ int main (void){
     game.snake_head= HEAD;
     game.user_name=NAME;
     game.snake_length = SIZE;
+    game.fruit_ch ='*';
+    game.fruit_x =6;
+    game.fruit_y =6;
+    game.speed=200;
 
 
     //then the game is started 
