@@ -1,12 +1,11 @@
-//startGame function is the first thing before loggin in 
+//startGame function is the first thing before loggin in/signing up 
 #include<stdio.h>
 #include<ncurses.h>
 #include<string.h>
+#include<stdlib.h>
 #include"score.h"
 #include"menu.h"
-/*#include"topscore.h"*/
 
-/*char x;*/
 
 void startGame(void){
 	char x;
@@ -26,15 +25,17 @@ void startGame(void){
 		x = getch();
 	}
 	if(x == '\n'){
-		checkPlayer(x);
+		checkPlayer();
 	}
 }
 	
-void checkPlayer(char x){
+void checkPlayer(void){
+	char x;
+
 	printw("Press 't' to see the scores\n");
 	printw("Press 'l' if you already played\n");
 	printw("Press 's' if you are new here\n");
-	/*x = getch();*/
+	x = getch();
 	
 	if(x == 'l'){
 		login();
@@ -48,6 +49,7 @@ void checkPlayer(char x){
 	else{
 		printw("Invalid option, try again\n");
 		refresh();
+		//satays in menu
 		checkPlayer();
 	}	
 
@@ -98,9 +100,10 @@ void signUp(void){
 	}
 	
 	else{
-		printw("Name already used. Choose another player: \n");
+		printw("Name already used. Try again! \n");
 		refresh();
-		signUp();
+		//goes to menu again
+		checkPlayer();
 	}
 	
 	
@@ -150,7 +153,7 @@ void login(void){
 		refresh();
 	}
 	else{
-		printw("User not found. Please, try again\n");
+		printw("User not found. Try again!\n");
 		refresh();
 		checkPlayer();
 	}
@@ -160,13 +163,13 @@ void login(void){
 	SCORE OF PLAYER
 	*/
 	
-	/*updateScore(5568, player);*/
+	updateScore(120, player);
 	
 	
 }
 
 
-/*Function to display players in order the highiest score to the lowest*/
+/*Function to display players in order from the highiest score to the lowest*/
 void top_score(void){
 	player_t player[NAME_MAX];
 	char *name;
@@ -209,10 +212,13 @@ void top_score(void){
 	}
 	refresh();
 
-	printw("\n\n\nPress ENTER to exit\n");
+	printw("\n\nPress ENTER to exit\n");
 	refresh();
+	
+	//waits for user to press enter	
 	while(getch() != '\n');
 	
+	//then goes to menu again 
 	checkPlayer();
 	
 }

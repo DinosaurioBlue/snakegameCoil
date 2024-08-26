@@ -2,7 +2,7 @@
 #define MENU
 
 void startGame(void);
-void checkPlayer(char);
+void checkPlayer(void);
 void signUp(void);
 void login(void);
 void top_score(void);

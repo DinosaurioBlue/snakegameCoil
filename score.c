@@ -2,6 +2,7 @@
 
 #include<stdio.h>
 #include<string.h>
+#include<ncurses.h>
 #include"score.h"
 
 
@@ -16,16 +17,18 @@ void updateScore(int score, const char *player){
 		perror("Failed to open file");
 	}
 	
-//read each line and if it encounters the name of the player it changes their score to the udated one (only if they got a better one)
+//Read each line and update the player's score if it's higher than the old one
 	while(fgets(buffer, sizeof(buffer), pChange) != NULL){
 		if(strstr(buffer, player) != NULL){
-			position = ftell(pChange);
 			scorePosition = strstr(buffer, "SCORE:");
-			sscanf(scorePosition, "%d", old_score);  
 			if(scorePosition){ 
-			//sets the pointer in the right position to change the player's score 
-				fseek(pChange, position - strlen(buffer) + (scorePosition - buffer) + 6, SEEK_SET);
-				if(score > old_score){    
+			//reads the player's old score
+				sscanf(scorePosition + 6 , "%d", &old_score); 
+				if(score > old_score){  
+					position = ftell(pChange);  
+					//sets the pointer in the right position to change the player's score
+					fseek(pChange, position - strlen(buffer) + (scorePosition - buffer) + 6, SEEK_SET);
+					//changes to new score
 					fprintf(pChange, "%-4d\n", score);
 				}	
 			}
