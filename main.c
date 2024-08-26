@@ -3,7 +3,7 @@
 #include"menu.h"
 //main function
 int main (void){
-
+    //creating the game and it's pointer
     game_settings_t game;
     game_settings_t * p2game=&game;
     //then the game is started 

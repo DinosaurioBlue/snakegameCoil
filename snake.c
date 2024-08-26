@@ -1,42 +1,51 @@
+#define DEVELOPING 1
+#ifdef DEVELOPING
+#define NAME "jorge"
+#define SNAKE_LENGTH 1
+#define SNAKE_HEAD '@'
+#define SNAKE_BODY 'O'
+#define LIFE 3
+#define BOARD_HEIGHT 20
+#define BOARD_WIDTH 20
+#define FRUIT_CH 'F'
+#define TIMESTEP 200
+
+#endif
+
+
 #include"snake.h"
+
+
 /*THIS WORKS AS MAIN GAME LOOP*/
 
 void start_game(game_settings_t * game){
 
     //initial settings
-    game->score=0;
-    game->life =3;
     int game_over=0;
-   	game_setup();
+   	game_setup(game);
 
     //initializing snake
     static snake_t snake;
     static snake_t * p2snake = &snake;
     InitializeSnake(p2snake,game);
     fruit(game);
-    game->score=0;
-
-
-
-
     //GAME LOOP
     while(!game_over){
         movement(p2snake, game);
         collisionscheck(p2snake, game, &game_over);
         draw(game, p2snake);
         #ifdef WINDOwS
-        Sleep(game.speed);  // delay
+        Sleep(game->timestep);  // delay
         #else
-        napms(game->speed);
+        napms(game->timestep);
         #endif
         
     }
-    getch();
     endgame(game,p2snake);
 }
 
 
-void game_setup(void){
+void game_setup(game_settings_t * game){
     #ifndef WINDOWS
     initscr(); // Start ncurses mode
     cbreak();  // Disable line buffering
@@ -46,6 +55,18 @@ void game_setup(void){
     #else
     CLEAR();
     #endif
+
+
+    game->board_height = BOARD_HEIGHT;
+    game->board_width = BOARD_WIDTH;
+    game->fruit_ch=FRUIT_CH;
+    game->life= LIFE;
+    game->snake_body= SNAKE_BODY;
+    game->snake_head=SNAKE_HEAD;
+    game->snake_length= SNAKE_LENGTH;
+    game->timestep= TIMESTEP;
+    game->user_name = NAME;
+
 
 }
 
@@ -120,7 +141,7 @@ void draw(game_settings_t* game,snake_t*snake){
 
 void InitializeSnake(snake_t *snake, game_settings_t * game) {//initializes snake
     snake->length= game->snake_length;
-    snake->pos = (vector_t*)malloc(MALLOCSIZE * sizeof(vector_t));
+    snake->pos = (vector_t*)malloc((snake->length) * sizeof(vector_t));
     if (snake->pos == NULL) {
         perror("Failed to allocate memory for snake");
         exit(EXIT_FAILURE);
@@ -132,6 +153,15 @@ void InitializeSnake(snake_t *snake, game_settings_t * game) {//initializes snak
     
 
 }
+void resize(snake_t * snake){
+snake->pos=(vector_t*)realloc(snake->pos,snake->length*sizeof(vector_t));
+ if (snake->pos == NULL) {
+        perror("Failed to allocate memory for snake");
+        exit(EXIT_FAILURE);
+    }
+
+}
+
 void mem_free(void *ptr) {
     if (ptr != NULL) {
         free(ptr);
@@ -143,24 +173,26 @@ void fruit(game_settings_t *game) {
     game->fruit_x = rand() % game->board_width+1;
     game->fruit_y = rand() % game->board_height+1;
 }
-void endgame(game_settings_t * game,snake_t * snake){
+void endgame(game_settings_t * game,snake_t * snake){//end messagge and deallocates memory
     CLEAR();
     #ifdef WINDOWS
     gotoxy(0,0);
     printf("Game Over! Your score was %d\n", game->score);
+    Sleep(2000);
     #else
-    mvprintw(0,0,"Game Over! Your score was %d\n", game->score);
+    mvprintw(0,0,"Game Over! Your score was %d\n", game->score);    
     refresh();
+    napms(2000);
     #endif
-    getch();
     mem_free(snake->pos);
+    
 }
 void movement(snake_t *snake, game_settings_t *game) {
     // Handling user input for movement
     int ch;
     #ifdef WINDOWS
     
-    if(kbhit()) {
+    if(kbhit()) {//this is to make the game not to be paused every time it gets here
         ch = getch();
         switch(ch) {
             case 'w': snake->dir.x = 0; snake->dir.y = -1; break;
@@ -170,7 +202,7 @@ void movement(snake_t *snake, game_settings_t *game) {
         }
     }
     #else
-    halfdelay(1);
+    halfdelay(1);//this is to make the game not to be paused every time it gets here
     ch = getch();
         switch(ch) {
             case 'w': snake->dir.x = 0; snake->dir.y = -1; break;
@@ -192,24 +224,52 @@ void collisionscheck(snake_t *snake, game_settings_t *game, int *game_over) {
     // Check for wall collisions
     if(snake->pos[0].x <= 0 || snake->pos[0].x >= game->board_width + 1 || 
        snake->pos[0].y <= 0 || snake->pos[0].y >= game->board_height + 1) {
-        *game_over = 1;
+
+        if(game->life>1){//checks if you sill have lifes and sets the snake as new
+            --(game->life);
+            (game->snake_length)=SNAKE_LENGTH;
+            free(snake->pos);
+            InitializeSnake(snake,game);
+            game->score-=20;
+        }
+        else{
+            *game_over=1;
+        }
     }
 
     // Check for self-collision
     for(int i = 1; i < snake->length; i++) {
         if(snake->pos[0].x == snake->pos[i].x && snake->pos[0].y == snake->pos[i].y) {
-            *game_over = 1;
+
+            if(game->life>1){//checks if you sill have lifes and sets the snake as new
+            --(game->life);
+            (game->snake_length)=SNAKE_LENGTH;
+            free(snake->pos);
+            InitializeSnake(snake,game);
+            game->score-=20;
+        }
+        else{
+            *game_over=1;
+        }
+            
         }
     }
 
-    // Check if fruit is eaten
+    // Check if fruit is eaten, 
     if(snake->pos[0].x == game->fruit_x && snake->pos[0].y == game->fruit_y) {
-        game->score += 10;
-        snake->length += 1;
+        game->score += 10;//updates score
+        snake->length += 1;//updates lenght
+        resize(snake);//resizes
         fruit(game);
+        if(game->timestep>50){
+            game->timestep-=10;//makes the game faster until the timestep is 50ms
+        }
     }
+            
+        
+    
 }
-#ifdef WINDOWS
+#ifdef WINDOWS//ncurses has this function integrated in mvprintw
 void gotoxy(int x, int y) {
     COORD coord;
     coord.X = x;
