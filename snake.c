@@ -6,9 +6,9 @@
 #define SNAKE_BODY 'O'
 #define LIFE 3
 #define BOARD_HEIGHT 20
-#define BOARD_WIDTH 20
+#define BOARD_WIDTH 30
 #define FRUIT_CH 'F'
-#define TIMESTEP 200
+#define TIMESTEP 0
 
 #endif
 
