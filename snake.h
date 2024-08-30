@@ -1,6 +1,6 @@
 #ifndef SNAKE_H
 #define SNAKE_H
-
+#define WINDOWS
 //includes and struct definitions
 
 
@@ -11,7 +11,7 @@
 #define CLEAR() system("cls")
 void gotoxy(int x, int y);
 #else
-#include<ncurses.h> 
+#include<ncurses.h>
 #define CLEAR() clear()
 #endif
 //general inlcudes
@@ -35,7 +35,7 @@ typedef struct {
 } game_settings_t;
 
 
-typedef struct 
+typedef struct
 {
     unsigned int x;
     unsigned int y;
