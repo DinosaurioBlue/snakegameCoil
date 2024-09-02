@@ -195,22 +195,48 @@ void movement(snake_t *snake, game_settings_t *game) {
 
     if(kbhit()) {//this is to make the game not to be paused every time it gets here
         ch = getch();
-        switch(ch) {
+        /*switch(ch) {
             case 'w': snake->dir.x = 0; snake->dir.y = -1; break;
             case 's': snake->dir.x = 0; snake->dir.y = 1; break;
             case 'a': snake->dir.x = -1; snake->dir.y = 0; break;
             case 'd': snake->dir.x = 1; snake->dir.y = 0; break;
+        }
+        */
+        if(ch=='w' && snake->dir.y !=1) {
+            snake->dir.x = 0; snake->dir.y = -1;
+        }
+        else if(ch=='s'&& snake->dir.y !=-1) {
+            snake->dir.x = 0; snake->dir.y = 1;
+        }
+        else if(ch=='a'&& snake->dir.x !=1) {
+            snake->dir.x = -1; snake->dir.y = 0;
+        }
+        else if(ch=='d'&& snake->dir.x !=-1) {
+            snake->dir.x = 1; snake->dir.y = 0;
         }
     }
     #else
     halfdelay(1);//this is to make the game not to be paused every time it gets here
     ch = getch();
-        switch(ch) {
+        /*switch(ch) {
             case 'w': snake->dir.x = 0; snake->dir.y = -1; break;
             case 's': snake->dir.x = 0; snake->dir.y = 1; break;
             case 'a': snake->dir.x = -1; snake->dir.y = 0; break;
             case 'd': snake->dir.x = 1; snake->dir.y = 0; break;
         }
+        */
+    if(ch=='w' && snake->dir.y !=1) {
+        snake->dir.x = 0; snake->dir.y = -1;
+    }
+    else if(ch=='s'&& snake->dir.y !=-1) {
+        snake->dir.x = 0; snake->dir.y = 1;
+    }
+    else if(ch=='a'&& snake->dir.x !=1) {
+        snake->dir.x = -1; snake->dir.y = 0;
+    }
+    else if(ch=='d'&& snake->dir.x !=-1) {
+        snake->dir.x = 1; snake->dir.y = 0;
+    }
 
     #endif
 
