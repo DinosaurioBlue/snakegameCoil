@@ -12,6 +12,7 @@ int main (void){
     
     printf("your score was %d\n",game.score);
 
+    startGame();
 
 
 
