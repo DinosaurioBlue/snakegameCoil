@@ -2,7 +2,6 @@
 
 #include<stdio.h>
 #include<string.h>
-#include<ncurses.h>
 #include"score.h"
 
 
@@ -23,7 +22,7 @@ void updateScore(int score, const char *player){
 			scorePosition = strstr(buffer, "SCORE:");
 			if(scorePosition){ 
 			//reads the player's old score
-				sscanf(scorePosition + 6 , "%d", &old_score); 
+				scanf(scorePosition + 6 , "%d", &old_score); 
 				if(score > old_score){  
 					position = ftell(pChange);  
 					//sets the pointer in the right position to change the player's score
