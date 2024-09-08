@@ -1,6 +1,5 @@
 //startGame function is the first thing before loggin in/signing up 
 #include<stdio.h>
-#include<ncurses.h>
 #include<string.h>
 #include<stdlib.h>
 #include"score.h"
@@ -10,19 +9,13 @@
 void startGame(void){
 	char x;
 	
-	//initializes ncurses screen
-	initscr();
-	noecho();
-	cbreak();
+		//the player will only be allowed to play if they press ENTER 	
+	printf("SNAKE GAME  \nPress ENTER to start...\n");
 	
-	//the player will only be allowed to play if they press ENTER 	
-	printw("SNAKE GAME  \nPress ENTER to start...\n");
-	refresh();
-	
-	x = getch();
+	x = getchar();
 	while(x != '\n' ){
-		printw("Press ENTER to start\n");
-		x = getch();
+		print("Press ENTER to start\n");
+		x = getchar();
 	}
 	if(x == '\n'){
 		checkPlayer();
@@ -32,10 +25,10 @@ void startGame(void){
 void checkPlayer(void){
 	char x;
 
-	printw("Press 't' to see the scores\n");
-	printw("Press 'l' if you already played\n");
-	printw("Press 's' if you are new here\n");
-	x = getch();
+	print("Press 't' to see the scores\n");
+	print("Press 'l' if you already played\n");
+	print("Press 's' if you are new here\n");
+	x = getchar();
 	
 	if(x == 'l'){
 		login();
@@ -47,9 +40,8 @@ void checkPlayer(void){
 		top_score();		
 	}
 	else{
-		printw("Invalid option, try again\n");
-		refresh();
-		//satays in menu
+		printf("Invalid option, try again\n");
+		//stays in menu
 		checkPlayer();
 	}	
 
@@ -65,11 +57,8 @@ void signUp(void){
 	FILE* ptrCheck;
 
 	
-	printw("Enter your name: "); //asks for the username
-	refresh();
-	echo();
+	printf("Enter your name: "); //asks for the username
 	getstr(player);
-	noecho();
 	
 	ptrCheck = fopen("history.txt", "r");//pointer to check if the username already exists
 	if(ptrCheck == NULL){
@@ -100,8 +89,7 @@ void signUp(void){
 	}
 	
 	else{
-		printw("Name already used. Try again! \n");
-		refresh();
+		print("Name already used. Try again! \n");
 		//goes to menu again
 		checkPlayer();
 	}
@@ -132,11 +120,8 @@ void login(void){
 	} 
 	
 	else{
-		printw("Enter yout username: ");
-		refresh();
-		echo();
+		printf("Enter yout username: ");
 		getstr(player);
-		noecho();
 		
 		while(fgets(buffer, sizeof(buffer), ptr) != NULL){
 			//stores the text that reads in the .txt and then compares it to the player name 
@@ -149,12 +134,10 @@ void login(void){
 	}
 	
 	if(log){
-		printw("Welcome back %s\n", player);
-		refresh();
+		printf("Welcome back %s\n", player);
 	}
 	else{
-		printw("User not found. Try again!\n");
-		refresh();
+		print("User not found. Try again!\n");
 		checkPlayer();
 	}
 	
@@ -189,9 +172,9 @@ void top_score(void){
 		
 		if((name != NULL) && (score!= NULL)) {
 			//copies the name of the player. USER: = 5. Sets the pointer to the first character of the name
-			sscanf(name + 5, "%s", player[count].user); 
+			scanf(name + 5, "%s", player[count].user); 
 			//copies the score of the player. SCORE: = 6. Sets the pointer to the number 
-			sscanf(score + 6, "%d", &player[count].score);
+			scanf(score + 6, "%d", &player[count].score);
 			count++;
 		}
 	}
@@ -206,17 +189,15 @@ void top_score(void){
 	
 	clear();
 	//prints the player with their score in descending order
-	printw("TOP SCORES: \n");
+	printf("TOP SCORES: \n");
 	for(i=0; i<count; i++){
-		printw("%s  ->  %d\n", player[i].user, player[i].score);
+		printf("%s  ->  %d\n", player[i].user, player[i].score);
 	}
-	refresh();
 
-	printw("\n\nPress ENTER to exit\n");
-	refresh();
+	printf("\n\nPress ENTER to exit\n");
 	
 	//waits for user to press enter	
-	while(getch() != '\n');
+	while(getchar() != '\n');
 	
 	//then goes to menu again 
 	checkPlayer();
