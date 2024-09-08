@@ -47,7 +47,7 @@ typedef struct {
 } snake_t;
 
 
-void start_game (game_settings_t * game);//main game loop
+void snakeGame (game_settings_t * game);//main game loop
 void game_setup (game_settings_t * game);//
 void kill_game(void);//end ncurses mode
 void draw(game_settings_t* game, snake_t* snake);//draws everything

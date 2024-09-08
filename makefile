@@ -14,7 +14,7 @@ score.o: score.c score.h
 	gcc -Wall -c score.c
 
 windows_snake: main.o snake.o menu.o score.o
-	gcc  -Wall -o snake main.o snake.o menu.o score.o 
+	gcc  -Wall -D WINDOWS -o snake main.o snake.o menu.o score.o 
 
 clean:
 	rm -rf *.o 

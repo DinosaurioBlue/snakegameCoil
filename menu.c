@@ -5,7 +5,29 @@
 #include"score.h"
 #include"menu.h"
 
+//void snakeGame (game_settings_t * game);//main game loop
+//void kill_game(void);//end ncurses mode
+/*
+#include<termios.h>
+*
+*system("clear");
+*/
 
+/*#include<windows.h
+*
+*system("cls");
+*/
+/*Here it changes wether you are in linux or windows
+*#ifdef WINDOWS
+*#include<windows.h>
+#include<conio.h>
+#define CLEAR() system("cls")
+void gotoxy(int x, int y);
+#else
+#include<termios.h>
+#define CLEAR() system("clear")
+#endif
+*/
 void startGame(void){
 	char x;
 	

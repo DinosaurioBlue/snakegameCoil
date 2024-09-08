@@ -8,7 +8,7 @@
 #define BOARD_HEIGHT 20
 #define BOARD_WIDTH 30
 #define FRUIT_CH 'F'
-#define TIMESTEP 0
+#define TIMESTEP 120
 
 #endif
 
@@ -19,7 +19,7 @@
 
 /*THIS WORKS AS MAIN GAME LOOP*/
 
-void start_game(game_settings_t * game){
+void snakeGame(game_settings_t * game){
 
     //initial settings
     int game_over=0;
@@ -57,7 +57,7 @@ void game_setup(game_settings_t * game){
     CLEAR();
     #endif
 
-
+    game->score =0;
     game->board_height = BOARD_HEIGHT;
     game->board_width = BOARD_WIDTH;
     game->fruit_ch=FRUIT_CH;
