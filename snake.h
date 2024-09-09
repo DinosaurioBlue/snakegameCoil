@@ -61,4 +61,6 @@ void fruit(game_settings_t *game);//randomly generates a food
 void gotoxy(int x, int y);//a funciton that moves where you are going to print. in ncurses is integrates in mvprintw(...)
 void endgame(game_settings_t * game,snake_t * snake);//final things to the game
 void resize(snake_t * snake);//whenever the snakes eats the fruit
+void collision(game_settings_t * game, snake_t * snake, int * game_over);
+void yummy(game_settings_t * game, snake_t * snake);
 #endif

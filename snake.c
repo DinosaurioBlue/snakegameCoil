@@ -67,7 +67,8 @@ void game_setup(game_settings_t * game){
     game->snake_length= SNAKE_LENGTH;
     game->timestep= TIMESTEP;
     game->user_name = NAME;
-    game->board_char;
+    game->board_char = BORDER_CHAR
+;
 
 
 }
@@ -248,17 +249,11 @@ void movement(snake_t *snake, game_settings_t *game) {
     snake->pos[0].x += snake->dir.x;
     snake->pos[0].y += snake->dir.y;
 }
-void collisionscheck(snake_t *snake, game_settings_t *game, int *game_over) {
+void collisionscheck(snake_t *snake, game_settings_t *game, int * game_over) {
     // Check for wall collisions
     if(snake->pos[0].x <= 0 || snake->pos[0].x >= game->board_width + 1 ||
        snake->pos[0].y <= 0 || snake->pos[0].y >= game->board_height + 1) {
-
-        if(game->life>1){//checks if you sill have lifes and sets the snake as new
-            --(game->life);
-            (game->snake_length)=SNAKE_LENGTH;
-            free(snake->pos);
-            InitializeSnake(snake,game);
-            game->score-=20;
+        collision(game, snake, game_over);
         }
         else{
             *game_over=1;
@@ -268,33 +263,43 @@ void collisionscheck(snake_t *snake, game_settings_t *game, int *game_over) {
     // Check for self-collision
     for(int i = 1; i < snake->length; i++) {
         if(snake->pos[0].x == snake->pos[i].x && snake->pos[0].y == snake->pos[i].y) {
-
-            if(game->life>1){//checks if you sill have lifes and sets the snake as new
-            --(game->life);
-            (game->snake_length)=SNAKE_LENGTH;
-            free(snake->pos);
-            InitializeSnake(snake,game);
-            game->score-=20;
-        }
-        else{
-            *game_over=1;
-        }
-
+            collision(game, snake, game_over);
         }
     }
 
     // Check if fruit is eaten,
     if(snake->pos[0].x == game->fruit_x && snake->pos[0].y == game->fruit_y) {
-        game->score += 10;//updates score
-        snake->length += 1;//updates lenght
-        resize(snake);//resizes
-        fruit(game);
-        if(game->timestep>50){
-            game->timestep-=10;//makes the game faster until the timestep is 50ms
-        }
+        yummy(game,snake);//what happens if a fruit is eaten??read below
     }
 
 
+
+}
+void collision(game_settings_t * game, snake_t * snake, int * game_over){
+
+     if(game->life>1){//checks if you sill have lifes and sets the snake as new
+            --(game->life);
+            (game->snake_length)=SNAKE_LENGTH;
+            free(snake->pos);
+            InitializeSnake(snake,game);
+            game->score-=20;
+            if(game->score<0){//this make the socre not to be negative
+                game->score =0;
+            }
+        }
+        else{
+            *game_over=1;
+        }
+}
+
+void yummy(game_settings_t * game, snake_t * snake){
+    game->score += 10;//updates score
+    snake->length += 1;//updates lenght
+    resize(snake);//resizes
+    fruit(game);
+    if(game->timestep>50){
+        game->timestep-=10;//makes the game faster until the timestep is 50ms
+    }
 
 }
 #ifdef WINDOWS//ncurses has this function integrated in mvprintw
