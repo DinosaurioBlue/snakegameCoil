@@ -9,7 +9,7 @@
 #define BOARD_WIDTH 30
 #define FRUIT_CH 'F'
 #define TIMESTEP 120
-
+#define BORDER_CHAR '#'
 #endif
 
 
@@ -67,6 +67,7 @@ void game_setup(game_settings_t * game){
     game->snake_length= SNAKE_LENGTH;
     game->timestep= TIMESTEP;
     game->user_name = NAME;
+    game->board_char;
 
 
 }
@@ -108,7 +109,7 @@ void draw(game_settings_t* game,snake_t*snake){
     #else//windows draw's function
     for (i = 0; i < game->board_width + 2; i++) {
         gotoxy(i, 0);
-        printf("#");
+        printf("%c",);
         gotoxy(i, game->board_height + 1);
         printf("#");
     }

@@ -24,6 +24,7 @@ typedef struct {
     int snake_length;
     char snake_head;
     char snake_body;
+    char board_char;
     int score;
     int life;
     unsigned char board_height;
