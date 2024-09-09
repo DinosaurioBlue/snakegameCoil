@@ -38,7 +38,6 @@ void snakeGame(game_settings_t * game){
         #ifdef WINDOWS
         Sleep(game->timestep);  // delay
         #else
-        napms(game->timestep);
         #endif
 
     }
@@ -197,13 +196,7 @@ void movement(snake_t *snake, game_settings_t *game) {
 
     if(kbhit()) {//this is to make the game not to be paused every time it gets here
         ch = getch();
-        /*switch(ch) {
-            case 'w': snake->dir.x = 0; snake->dir.y = -1; break;
-            case 's': snake->dir.x = 0; snake->dir.y = 1; break;
-            case 'a': snake->dir.x = -1; snake->dir.y = 0; break;
-            case 'd': snake->dir.x = 1; snake->dir.y = 0; break;
-        }
-        */
+        
         if(ch=='w' && snake->dir.y !=1) {
             snake->dir.x = 0; snake->dir.y = -1;
         }
@@ -218,15 +211,8 @@ void movement(snake_t *snake, game_settings_t *game) {
         }
     }
     #else
-    halfdelay(1);//this is to make the game not to be paused every time it gets here
+   timeout(200);//this is to make the game not to be paused every time it gets here
     ch = getch();
-        /*switch(ch) {
-            case 'w': snake->dir.x = 0; snake->dir.y = -1; break;
-            case 's': snake->dir.x = 0; snake->dir.y = 1; break;
-            case 'a': snake->dir.x = -1; snake->dir.y = 0; break;
-            case 'd': snake->dir.x = 1; snake->dir.y = 0; break;
-        }
-        */
     if(ch=='w' && snake->dir.y !=1) {
         snake->dir.x = 0; snake->dir.y = -1;
     }
@@ -250,15 +236,12 @@ void movement(snake_t *snake, game_settings_t *game) {
     snake->pos[0].y += snake->dir.y;
 }
 void collisionscheck(snake_t *snake, game_settings_t *game, int * game_over) {
+
     // Check for wall collisions
     if(snake->pos[0].x <= 0 || snake->pos[0].x >= game->board_width + 1 ||
        snake->pos[0].y <= 0 || snake->pos[0].y >= game->board_height + 1) {
         collision(game, snake, game_over);
-        }
-        else{
-            *game_over=1;
-        }
-    
+    }
 
     // Check for self-collision
     for(int i = 1; i < snake->length; i++) {
