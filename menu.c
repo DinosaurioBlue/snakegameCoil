@@ -9,19 +9,15 @@
 void startGame(game_settings_t * game){
 	char x;
 	
-	//initializes ncurses screen
-	initscr();
-	noecho();
-	cbreak();
-	
 	//the player will only be allowed to play if they press ENTER 	
-	printw("SNAKE GAME  \nPress ENTER to start...\n");
-	refresh();
-	//drawTitle();
+	printf("SNAKE GAME  \nPress ENTER to start...\n");
+	fflush(stdout);
 	
-	x = getch();
+	
+	x = getchar();
 	while(x != '\n' ){
-		printw("Press ENTER to start\n");
+		printf("Press ENTER to start\n");
+		fflush(stdout);
 		x = getch();
 	}
 	if(x == '\n'){
@@ -32,10 +28,12 @@ void startGame(game_settings_t * game){
 void checkPlayer(game_settings_t *game){
 	char x;
 
-	printw("[T] TOP SCORES\n");
-	printw("[L] LOG IN\n");
-	printw("[S] SIGN IN\n");
-	x = getch();
+	printf("[T] TOP SCORES\n");
+	printf("[L] LOG IN\n");
+	printf("[S] SIGN IN\n");
+	fflush(stdout);	
+	
+	x = getchar();
 	
 	if(x == 'l' || x == 'L'){
 		login(game);
@@ -47,9 +45,9 @@ void checkPlayer(game_settings_t *game){
 		top_score(game);		
 	}
 	else{
-		printw("Invalid option, try again\n");
-		refresh();
-		//satays in menu
+		printf("Invalid option, try again\n");
+		fflush(stdout);
+		//stays in menu
 		checkPlayer(game);
 	}	
 
@@ -65,11 +63,10 @@ void signUp(game_settings_t *game){
 	FILE* ptrCheck;
 
 	
-	printw("Enter your name: "); //asks for the username
-	refresh();
-	echo();
-	getstr(player);
-	noecho();
+	printf("Enter your name: "); //asks for the username
+	fflush(stdout);
+	fgets(player, sizeof(player), stdin);
+	player[strcspn(player, "\n")] = '\0'; // Remove newline character
 	
 	ptrCheck = fopen("history.txt", "r");//pointer to check if the username already exists
 	if(ptrCheck == NULL){
@@ -100,18 +97,17 @@ void signUp(game_settings_t *game){
 	}
 	
 	else{
-		printw("Name already used. Try again! \n");
-		refresh();
+		printf("Name already used. Try again! \n");
+		fflush(stdout);
 		//goes to menu again
 		checkPlayer(game);
 	}
 
+	//game logics
 	snakeGame(game);
 	updateScore(game, player);
-	kill_game();
+	kill_game();	
 
-	
-	
 }
 
 
@@ -129,11 +125,10 @@ void login(game_settings_t *game){
 	} 
 	
 	else{
-		printw("Enter yout username: ");
-		refresh();
-		echo();
-		getstr(player);
-		noecho();
+		printf("Enter yout username: ");
+		fflush(stdout);
+		fgets(player, sizeof(player), stdin);
+		player[strcspn(player, "\n")] = '\0';
 		
 		while(fgets(buffer, sizeof(buffer), ptr) != NULL){
 			//stores the text that reads in the .txt and then compares it to the player name 
@@ -146,20 +141,19 @@ void login(game_settings_t *game){
 	}
 	
 	if(log){
-		printw("Welcome back %s\n", player);
-		refresh();
+		printf("Welcome back %s\n", player);
+		fflush(stdout);
 	}
 	else{
-		printw("User not found. Try again!\n");
-		refresh();
+		printf("User not found. Try again!\n");
+		fflush(stdout);
 		checkPlayer(game);
 	}
 	
 	snakeGame (game);
 	updateScore(game, player);
 	kill_game();
-	
-		
+			
 }
 
 
@@ -181,7 +175,7 @@ void top_score(game_settings_t *game){
 		name = strstr(buffer, "USER:");
 		score = strstr(buffer, "SCORE:");
 		
-		if((name != NULL) && (score!= NULL)) {
+		if(name != NULL && score!= NULL) {
 			//copies the name of the player. USER: = 5. Sets the pointer to the first character of the name
 			sscanf(name + 5, "%s", player[count].user); 
 			//copies the score of the player. SCORE: = 6. Sets the pointer to the number 
@@ -198,16 +192,16 @@ void top_score(game_settings_t *game){
 	//sort players by score
 	qsort(player, count, sizeof(player_t), comparePlayer);
 	
-	clear();
 	//prints the player with their score in descending order
-	printw("TOP SCORES: \n");
+	printf("TOP SCORES: \n");
+	fflush(stdout);
 	for(i=0; i<count; i++){
-		printw("%s  ->  %d\n", player[i].user, player[i].score);
+		printf("%s  ->  %d\n", player[i].user, player[i].score);
 	}
-	refresh();
+	fflush(stdout);
 
-	printw("\n\nPress ENTER to exit\n");
-	refresh();
+	printf("\n\nPress ENTER to exit\n");
+	fflush(stdout);
 	
 	//waits for user to press enter	
 	while(getch() != '\n');

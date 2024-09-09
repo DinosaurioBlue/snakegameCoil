@@ -24,7 +24,7 @@ void updateScore(game_settings_t *game, const char *player){
 			scorePosition = strstr(buffer, "SCORE:");
 			if(scorePosition){ 
 			//reads the player's old score
-				scanf(scorePosition + 6 , "%d", &old_score); 
+				sscanf(scorePosition + 6 , "%d", &old_score); 
 				if(score > old_score){  
 					position = ftell(pChange);  
 					//sets the pointer in the right position to change the player's score
