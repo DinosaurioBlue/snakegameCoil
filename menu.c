@@ -1,21 +1,10 @@
 //startGame function is the first thing before loggin in/signing up 
 #include<stdio.h>
-#include<ncurses.h>
 #include<string.h>
 #include<stdlib.h>
+#include"snake.h"
 #include"score.h"
 #include"menu.h"
-
-#ifdef WINDOWS
-	#include<windows.h>
-	#include<conio.h>
-	#define CLEAR() system("cls")
-	void gotoxy(int x, int y);
-#else
-	#include<termios.h>
-	#define CLEAR() system("clear")
-#endif
-
 
 void startGame(game_settings_t * game){
 	char x;
@@ -36,39 +25,39 @@ void startGame(game_settings_t * game){
 		x = getch();
 	}
 	if(x == '\n'){
-		checkPlayer();
+		checkPlayer(game);
 	}
 }
 	
-void checkPlayer(void){
+void checkPlayer(game_settings_t *game){
 	char x;
 
-	printw("[t] TOP SCORES\n");
-	printw("[l] LOG IN\n");
-	printw("[s] SIGN IN\n");
+	printw("[T] TOP SCORES\n");
+	printw("[L] LOG IN\n");
+	printw("[S] SIGN IN\n");
 	x = getch();
 	
-	if(x == 'l'){
-		login();
+	if(x == 'l' || x == 'L'){
+		login(game);
 	}
-	else if(x == 's'){
-		signUp();
+	else if(x == 's' || x == 'S'){
+		signUp(game);
 	}
-	else if(x == 't'){
-		top_score();		
+	else if(x == 't' || x == 'T'){
+		top_score(game);		
 	}
 	else{
 		printw("Invalid option, try again\n");
 		refresh();
 		//satays in menu
-		checkPlayer();
+		checkPlayer(game);
 	}	
 
 }
 
 
 //this function signs up new players
-void signUp(void){
+void signUp(game_settings_t *game){
 	char trash[500];
 	char player[NAME_MAX];
 	int found = 0;
@@ -114,11 +103,11 @@ void signUp(void){
 		printw("Name already used. Try again! \n");
 		refresh();
 		//goes to menu again
-		checkPlayer();
+		checkPlayer(game);
 	}
 
-	snakeGame (&game);
-	updateScore(520, player);
+	snakeGame(game);
+	updateScore(game, player);
 	kill_game();
 
 	
@@ -129,7 +118,7 @@ void signUp(void){
 
 
 //this function checks if the player already exists and they log in 
-void login(void){
+void login(game_settings_t *game){
 	char player[NAME_MAX];
 	char buffer[500]; 
 	int log = 0;
@@ -163,11 +152,11 @@ void login(void){
 	else{
 		printw("User not found. Try again!\n");
 		refresh();
-		checkPlayer();
+		checkPlayer(game);
 	}
 	
-	snakeGame (&game);
-	updateScore(120, player);
+	snakeGame (game);
+	updateScore(game, player);
 	kill_game();
 	
 		
@@ -175,7 +164,7 @@ void login(void){
 
 
 /*Function to display players in order from the highiest score to the lowest*/
-void top_score(void){
+void top_score(game_settings_t *game){
 	player_t player[NAME_MAX];
 	char *name;
 	char *score;
@@ -224,7 +213,7 @@ void top_score(void){
 	while(getch() != '\n');
 	
 	//then goes to menu again 
-	checkPlayer();
+	checkPlayer(game);
 	
 }
 
