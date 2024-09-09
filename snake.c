@@ -258,7 +258,7 @@ void collisionscheck(snake_t *snake, game_settings_t *game, int * game_over) {
         else{
             *game_over=1;
         }
-    }
+    
 
     // Check for self-collision
     for(int i = 1; i < snake->length; i++) {
