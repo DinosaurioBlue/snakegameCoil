@@ -1,7 +1,7 @@
 #ifndef USERNAME
 #define USERNAME
 
-void updateScore(int , const char *player);
+void updateScore(game_settings_t *, const char *player);
 
 
 #endif

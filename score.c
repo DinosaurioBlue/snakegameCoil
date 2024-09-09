@@ -3,12 +3,14 @@
 #include<stdio.h>
 #include<string.h>
 #include"score.h"
+#include"snake.h"
 
 
-void updateScore(int score, const char *player){
+void updateScore(game_settings_t *game, const char *player){
 	char buffer[200];
 	char *scorePosition;
 	int old_score;
+	int score = game->score;
 	unsigned long int position;
 	FILE *pChange = fopen("history.txt", "r+");
 	
