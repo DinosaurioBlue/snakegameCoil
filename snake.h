@@ -16,6 +16,7 @@ void gotoxy(int x, int y);
 //general inlcudes
 #include<time.h>
 #include<stdlib.h>
+#include<stdio.h>
 
 //struct definitions
 typedef struct {

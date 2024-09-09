@@ -14,7 +14,7 @@
 
 
 #include"snake.h"
-#include <stdio.h>
+
 
 
 /*THIS WORKS AS MAIN GAME LOOP*/
