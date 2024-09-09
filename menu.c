@@ -1,43 +1,39 @@
 //startGame function is the first thing before loggin in/signing up 
 #include<stdio.h>
+#include<ncurses.h>
 #include<string.h>
 #include<stdlib.h>
 #include"score.h"
 #include"menu.h"
 
-//void snakeGame (game_settings_t * game);//main game loop
-//void kill_game(void);//end ncurses mode
-/*
-#include<termios.h>
-*
-*system("clear");
-*/
-
-/*#include<windows.h
-*
-*system("cls");
-*/
-/*Here it changes wether you are in linux or windows
-*#ifdef WINDOWS
-*#include<windows.h>
-#include<conio.h>
-#define CLEAR() system("cls")
-void gotoxy(int x, int y);
+#ifdef WINDOWS
+	#include<windows.h>
+	#include<conio.h>
+	#define CLEAR() system("cls")
+	void gotoxy(int x, int y);
 #else
-#include<termios.h>
-#define CLEAR() system("clear")
+	#include<termios.h>
+	#define CLEAR() system("clear")
 #endif
-*/
-void startGame(void){
+
+
+void startGame(game_settings_t * game){
 	char x;
 	
-		//the player will only be allowed to play if they press ENTER 	
-	printf("SNAKE GAME  \nPress ENTER to start...\n");
+	//initializes ncurses screen
+	initscr();
+	noecho();
+	cbreak();
 	
-	x = getchar();
+	//the player will only be allowed to play if they press ENTER 	
+	printw("SNAKE GAME  \nPress ENTER to start...\n");
+	refresh();
+	//drawTitle();
+	
+	x = getch();
 	while(x != '\n' ){
-		print("Press ENTER to start\n");
-		x = getchar();
+		printw("Press ENTER to start\n");
+		x = getch();
 	}
 	if(x == '\n'){
 		checkPlayer();
@@ -47,10 +43,10 @@ void startGame(void){
 void checkPlayer(void){
 	char x;
 
-	print("Press 't' to see the scores\n");
-	print("Press 'l' if you already played\n");
-	print("Press 's' if you are new here\n");
-	x = getchar();
+	printw("[t] TOP SCORES\n");
+	printw("[l] LOG IN\n");
+	printw("[s] SIGN IN\n");
+	x = getch();
 	
 	if(x == 'l'){
 		login();
@@ -62,8 +58,9 @@ void checkPlayer(void){
 		top_score();		
 	}
 	else{
-		printf("Invalid option, try again\n");
-		//stays in menu
+		printw("Invalid option, try again\n");
+		refresh();
+		//satays in menu
 		checkPlayer();
 	}	
 
@@ -79,8 +76,11 @@ void signUp(void){
 	FILE* ptrCheck;
 
 	
-	printf("Enter your name: "); //asks for the username
+	printw("Enter your name: "); //asks for the username
+	refresh();
+	echo();
 	getstr(player);
+	noecho();
 	
 	ptrCheck = fopen("history.txt", "r");//pointer to check if the username already exists
 	if(ptrCheck == NULL){
@@ -111,19 +111,17 @@ void signUp(void){
 	}
 	
 	else{
-		print("Name already used. Try again! \n");
+		printw("Name already used. Try again! \n");
+		refresh();
 		//goes to menu again
 		checkPlayer();
 	}
+
+	snakeGame (&game);
+	updateScore(520, player);
+	kill_game();
+
 	
-	
-	/*
-	PLAY FUNCTION
-	SCORE OF PLAYER
-	*/
-	
-	
-	/*updateScore(520, player);*/
 	
 }
 
@@ -142,8 +140,11 @@ void login(void){
 	} 
 	
 	else{
-		printf("Enter yout username: ");
+		printw("Enter yout username: ");
+		refresh();
+		echo();
 		getstr(player);
+		noecho();
 		
 		while(fgets(buffer, sizeof(buffer), ptr) != NULL){
 			//stores the text that reads in the .txt and then compares it to the player name 
@@ -156,21 +157,20 @@ void login(void){
 	}
 	
 	if(log){
-		printf("Welcome back %s\n", player);
+		printw("Welcome back %s\n", player);
+		refresh();
 	}
 	else{
-		print("User not found. Try again!\n");
+		printw("User not found. Try again!\n");
+		refresh();
 		checkPlayer();
 	}
 	
-	/*
-	PLAY FUNCTION
-	SCORE OF PLAYER
-	*/
-	
+	snakeGame (&game);
 	updateScore(120, player);
+	kill_game();
 	
-	
+		
 }
 
 
@@ -194,9 +194,9 @@ void top_score(void){
 		
 		if((name != NULL) && (score!= NULL)) {
 			//copies the name of the player. USER: = 5. Sets the pointer to the first character of the name
-			scanf(name + 5, "%s", player[count].user); 
+			sscanf(name + 5, "%s", player[count].user); 
 			//copies the score of the player. SCORE: = 6. Sets the pointer to the number 
-			scanf(score + 6, "%d", &player[count].score);
+			sscanf(score + 6, "%d", &player[count].score);
 			count++;
 		}
 	}
@@ -211,15 +211,17 @@ void top_score(void){
 	
 	clear();
 	//prints the player with their score in descending order
-	printf("TOP SCORES: \n");
+	printw("TOP SCORES: \n");
 	for(i=0; i<count; i++){
-		printf("%s  ->  %d\n", player[i].user, player[i].score);
+		printw("%s  ->  %d\n", player[i].user, player[i].score);
 	}
+	refresh();
 
-	printf("\n\nPress ENTER to exit\n");
+	printw("\n\nPress ENTER to exit\n");
+	refresh();
 	
 	//waits for user to press enter	
-	while(getchar() != '\n');
+	while(getch() != '\n');
 	
 	//then goes to menu again 
 	checkPlayer();
@@ -233,9 +235,6 @@ int comparePlayer(const void * a, const void * b){
 	player_t *pB = (player_t *)b;
 	return (pB->score - pA->score);
 }
-
-
-
 
 
 
