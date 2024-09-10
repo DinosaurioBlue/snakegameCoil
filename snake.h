@@ -21,17 +21,17 @@ void gotoxy(int x, int y);
 //struct definitions
 typedef struct {
     const char * user_name;
-    int snake_length;
     char snake_head;
     char snake_body;
     char board_char;
+    char fruit_ch;
     int score;
     int life;
-    unsigned char board_height;
+    int snake_length;
+    unsigned int board_height;
     unsigned int board_width;
     int fruit_x;
     int fruit_y;
-    char fruit_ch;
     int timestep;
 } game_settings_t;
 

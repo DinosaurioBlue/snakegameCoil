@@ -57,6 +57,8 @@ void game_setup(game_settings_t * game){
     #endif
 
     game->score =0;
+
+    //THIS MUST BE DELETED ONCE MENU IS DONE
     game->board_height = BOARD_HEIGHT;
     game->board_width = BOARD_WIDTH;
     game->fruit_ch=FRUIT_CH;
@@ -67,6 +69,7 @@ void game_setup(game_settings_t * game){
     game->timestep= TIMESTEP;
     game->user_name = NAME;
     game->board_char = BORDER_CHAR
+    //TILL HERE
 ;
 
 

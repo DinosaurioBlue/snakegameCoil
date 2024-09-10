@@ -7,17 +7,16 @@ void signUp(game_settings_t *);
 void login(game_settings_t *);
 void top_score(game_settings_t *);
 int comparePlayer(const void *a, const void *b);
-void snakeGame (game_settings_t *);
-void kill_game(void);
-
+void configureGame (game_settings_t * game);
+void cleanStdin(void);
 #ifdef WINDOWS
 #include<windows.h>
 #include<conio.h>
 #define CLEAR() system("cls")
 void gotoxy(int x, int y);
 #else
-#include<ncurses.h>
-#define CLEAR() clear()
+#include<termios.h>
+#define CLEAR() system("clear");
 #endif
 
 #define NAME_MAX 30
