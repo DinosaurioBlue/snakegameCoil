@@ -354,10 +354,6 @@ void configureGame (game_settings_t * game, char player[]){
 
 
 
-	
-
-	//freeing pointer
-	free(temp);
 	cleanStdin();
 	snakeGame(game);
 	updateScore(game, player);

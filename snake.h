@@ -15,6 +15,7 @@ typedef struct {
     int fruit_x;
     int fruit_y;
     int timestep;
+    bool gameConfigured;
 } game_settings_t;
 
 

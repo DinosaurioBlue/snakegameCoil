@@ -71,19 +71,19 @@ void game_setup(game_settings_t * game){
 
     game->score =0;
 
-    //THIS MUST BE DELETED ONCE MENU IS DONE
-    game->board_height = BOARD_HEIGHT;
-    game->board_width = BOARD_WIDTH;
-    game->board_char = BORDER_CHAR;
-    game->fruit_ch=FRUIT_CH;
-    game->life= LIFE;
-    game->snake_body= SNAKE_BODY;
-    game->snake_head=SNAKE_HEAD;
-    game->snake_length= SNAKE_LENGTH;
-    game->timestep= TIMESTEP;
-    game->user_name = NAME;
     
-    //TILL HERE
+    if(!game->gameConfigured){
+        game->board_height = BOARD_HEIGHT;
+        game->board_width = BOARD_WIDTH;
+        game->board_char = BORDER_CHAR;
+        game->fruit_ch=FRUIT_CH;
+        game->life= LIFE;
+        game->snake_body= SNAKE_BODY;
+        game->snake_head=SNAKE_HEAD;
+        game->snake_length= SNAKE_LENGTH;
+        game->timestep= TIMESTEP;
+        game->user_name = NAME;
+    }
 
 
 
