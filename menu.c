@@ -240,8 +240,7 @@ int comparePlayer(const void * a, const void * b){
 //function to configure game settings
 void configureGame (game_settings_t * game, char player[]){
 	int flag =0;
-	int * temp = (int*)malloc(sizeof(int));
-	
+	int temp;	
 	CLEAR();
 	
 	//Configurate board
@@ -255,7 +254,7 @@ void configureGame (game_settings_t * game, char player[]){
 			printf("please enter an integer from %d to %d\n",MIN_SIZE,MAX_SIZE);
 		}
 		else{
-			game->board_height = *(temp);
+			game->board_height = (temp);
 			flag++;
 		}
 	}
@@ -270,7 +269,7 @@ void configureGame (game_settings_t * game, char player[]){
 			printf("please enter an integer from %d to %d\n",MIN_SIZE,MAX_SIZE);
 		}
 		else{
-			game->board_width = *(temp);
+			game->board_width = (temp);
 			flag++;
 		}
 		
@@ -279,19 +278,19 @@ void configureGame (game_settings_t * game, char player[]){
 	printf("what character would you like your board to use?\n");//border character
 	cleanStdin();
 	temp = getchar();
-	game->board_char = (char)(*(temp));	
+	game->board_char = (char)(temp);	
 
 	//configure snake
 	CLEAR();
 	printf("what character would you like the head of snake to be?\n");//snake head
 	cleanStdin();
 	temp = getchar();
-	game->snake_head = (char)(*(temp));	
+	game->snake_head = (char)(temp);	
 
 	printf("what character would you like the body of snake to be?\n");//snake body
 	cleanStdin();
 	temp = getchar();
-	game->snake_body= (char)(*(temp));
+	game->snake_body= (char)(temp);
 
 	printf("how long would you like your snake to be?\n");//initial snake size
 	flag = temp =0;//restarting values
@@ -304,7 +303,7 @@ void configureGame (game_settings_t * game, char player[]){
 			printf("please enter an integer from %d to %d\n",MIN_SNAKE,MAX_SNAKE);
 		}
 		else{
-			game->snake_length = *(temp);
+			game->snake_length = (temp);
 			flag++;
 		}
 	}
@@ -317,7 +316,7 @@ void configureGame (game_settings_t * game, char player[]){
 	printf("what character would you like the food to be?\n");//food apearrence
 	cleanStdin();
 	temp = getchar();
-	game->fruit_ch= (char)(*(temp));
+	game->fruit_ch= (char)(temp);
 
 	//general game settings	
 	printf("how many lifes would you like to have?\n");//initial lifes
@@ -331,7 +330,7 @@ void configureGame (game_settings_t * game, char player[]){
 			printf("please enter an integer from %d to %d\n",MIN_LIFE,MAX_LIFE);
 		}
 		else{
-			game->life = *(temp);
+			game->life = (temp);
 			flag++;
 		}
 	}
@@ -347,7 +346,7 @@ void configureGame (game_settings_t * game, char player[]){
 			printf("please enter an integer from %d to %d\n",MIN_TIME,MAX_TIME);
 		}
 		else{
-			game->timestep = *(temp);
+			game->timestep = (temp);
 			flag++;
 		}
 	}
