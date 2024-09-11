@@ -27,7 +27,7 @@ void gotoxy(int x, int y);
 
 void startGame(game_settings_t * game){
 	char x;
-	
+	game->configured =0;
 	CLEAR();
 	//the player will only be allowed to play if they press ENTER 	
 	printf("SNAKE GAME  \nPress ENTER to start...\n");
@@ -352,8 +352,7 @@ void configureGame (game_settings_t * game, char player[]){
 		}
 	}
 
-
-
+	game->configured =1;
 	cleanStdin();
 	snakeGame(game);
 	updateScore(game, player);

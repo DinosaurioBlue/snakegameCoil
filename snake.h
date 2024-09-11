@@ -2,7 +2,6 @@
 #define SNAKE_H
 //struct definitions
 typedef struct {
-    const char * user_name;
     char snake_head;
     char snake_body;
     char board_char;
@@ -15,7 +14,7 @@ typedef struct {
     int fruit_x;
     int fruit_y;
     int timestep;
-    bool gameConfigured;
+    unsigned int configured;
 } game_settings_t;
 
 

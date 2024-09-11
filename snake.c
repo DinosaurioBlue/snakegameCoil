@@ -72,7 +72,7 @@ void game_setup(game_settings_t * game){
     game->score =0;
 
     
-    if(!game->gameConfigured){
+    if(!game->configured){
         game->board_height = BOARD_HEIGHT;
         game->board_width = BOARD_WIDTH;
         game->board_char = BORDER_CHAR;
@@ -82,7 +82,7 @@ void game_setup(game_settings_t * game){
         game->snake_head=SNAKE_HEAD;
         game->snake_length= SNAKE_LENGTH;
         game->timestep= TIMESTEP;
-        game->user_name = NAME;
+        
     }
 
 
