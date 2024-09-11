@@ -4,7 +4,7 @@
 
 
 /*Here it changes wether you are in linux or windows*/
-#ifdef WINDOWS
+/*#ifdef WINDOWS
 #include<windows.h>
 #include<conio.h>
 #define CLEAR() system("cls")
@@ -16,7 +16,7 @@ void gotoxy(int x, int y);
 //general inlcudes
 #include<time.h>
 #include<stdlib.h>
-#include<stdio.h>
+#include<stdio.h>*/
 
 //struct definitions
 typedef struct {

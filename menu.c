@@ -14,23 +14,35 @@
 #define MAX_LIFE 5
 #define MIN_TIME 1
 #define MAX_TIME 200
+
+#ifdef WINDOWS
+#include<windows.h>
+#include<conio.h>
+#define CLEAR() system("cls")
+void gotoxy(int x, int y);
+#else
+#include<termios.h>
+#define CLEAR() system("clear");
+#endif
+
 void startGame(game_settings_t * game){
 	char x;
 	
+	CLEAR();
 	//the player will only be allowed to play if they press ENTER 	
 	printf("SNAKE GAME  \nPress ENTER to start...\n");
-	fflush(stdout);
 	
 	
 	x = getchar();
-	while(x != '\n' ){
+	
+	/*while(x != '\n' ){
 		printf("Press ENTER to start\n");
-		fflush(stdout);
-		x = getch();
-	}
+		x = getchar();
+	}*/
 	if(x == '\n'){
 		checkPlayer(game);
 	}
+	cleanStdin();
 }
 	
 void checkPlayer(game_settings_t *game){
@@ -39,25 +51,29 @@ void checkPlayer(game_settings_t *game){
 	printf("[T] TOP SCORES\n");
 	printf("[L] LOG IN\n");
 	printf("[S] SIGN IN\n");
-	fflush(stdout);	
+	
 	
 	x = getchar();
 	
 	if(x == 'l' || x == 'L'){
+		cleanStdin();
 		login(game);
 	}
 	else if(x == 's' || x == 'S'){
+		cleanStdin();
 		signUp(game);
 	}
 	else if(x == 't' || x == 'T'){
+		cleanStdin();
 		top_score(game);		
 	}
 	else{
 		printf("Invalid option, try again\n");
-		fflush(stdout);
+		cleanStdin();
 		//stays in menu
 		checkPlayer(game);
 	}	
+	
 
 }
 
@@ -72,7 +88,6 @@ void signUp(game_settings_t *game){
 
 	
 	printf("Enter your name: "); //asks for the username
-	fflush(stdout);
 	fgets(player, sizeof(player), stdin);
 	player[strcspn(player, "\n")] = '\0'; // Remove newline character
 	
@@ -106,16 +121,11 @@ void signUp(game_settings_t *game){
 	
 	else{
 		printf("Name already used. Try again! \n");
-		fflush(stdout);
 		//goes to menu again
 		checkPlayer(game);
 	}
 
-	//game logics
-	snakeGame(game);
-	updateScore(game, player);
-	kill_game();	
-
+	askConfig(game, player);
 }
 
 
@@ -133,10 +143,17 @@ void login(game_settings_t *game){
 	} 
 	
 	else{
-		printf("Enter yout username: ");
-		fflush(stdout);
+		printf("Enter your username: ");
 		fgets(player, sizeof(player), stdin);
-		player[strcspn(player, "\n")] = '\0';
+		
+		//get rid of 'enter' in the player's username
+		for(int i = 0; i < NAME_MAX; i++){
+			if(player[i] == '\n'){
+				//printf("encontre un enter!\n");
+				player[i] = 0;
+				//break;
+			}
+		}
 		
 		while(fgets(buffer, sizeof(buffer), ptr) != NULL){
 			//stores the text that reads in the .txt and then compares it to the player name 
@@ -150,18 +167,14 @@ void login(game_settings_t *game){
 	
 	if(log){
 		printf("Welcome back %s\n", player);
-		fflush(stdout);
+		askConfig(game, player);
 	}
 	else{
 		printf("User not found. Try again!\n");
-		fflush(stdout);
 		checkPlayer(game);
 	}
 	
-	snakeGame (game);
-	updateScore(game, player);
-	kill_game();
-			
+	
 }
 
 
@@ -171,7 +184,7 @@ void top_score(game_settings_t *game){
 	char *name;
 	char *score;
 	char buffer[500];
-	int count = 0, i;
+	int count = 0, i, x;
 	FILE *pScan = fopen("history.txt", "r");
 	
 	if(pScan == NULL){
@@ -202,20 +215,16 @@ void top_score(game_settings_t *game){
 	
 	//prints the player with their score in descending order
 	printf("TOP SCORES: \n");
-	fflush(stdout);
 	for(i=0; i<count; i++){
 		printf("%s  ->  %d\n", player[i].user, player[i].score);
 	}
-	fflush(stdout);
-
 	printf("\n\nPress ENTER to exit\n");
-	fflush(stdout);
-	
 	//waits for user to press enter	
-	while(getch() != '\n');
-	
-	//then goes to menu again 
-	checkPlayer(game);
+	if((x=getchar()) == '\n'){		
+		//then goes to menu again 
+		CLEAR();
+		checkPlayer(game);
+	}
 	
 }
 
@@ -227,7 +236,9 @@ int comparePlayer(const void * a, const void * b){
 	return (pB->score - pA->score);
 }
 
-void configureGame (game_settings_t * game){
+
+//function to configure game settings
+void configureGame (game_settings_t * game, char player[]){
 	int flag =0;
 	int * temp = (int*)malloc(sizeof(int));
 	
@@ -347,6 +358,9 @@ void configureGame (game_settings_t * game){
 
 	//freeing pointer
 	free(temp);
+	cleanStdin();
+	snakeGame(game);
+	updateScore(game, player);
 		
 }
 void cleanStdin(void){
@@ -354,9 +368,28 @@ void cleanStdin(void){
 	while((temp = getchar())!='\n' && temp !=EOF);//clear the buffer
 }
 
-
-
-
+void askConfig(game_settings_t*game, char player[]){
+	int x;
+	printf("Would you like to configure the game?\n");
+	printf("[Y]\n[N]\n");
+	
+	x=getchar();
+	if(x=='Y' || x== 'y'){
+		CLEAR();
+		configureGame(game, player);
+		
+	}
+	else if(x=='N' || x== 'n'){
+		CLEAR();
+		snakeGame(game);
+		updateScore(game, player);
+	}
+	else{
+		printf("Invalid option, try again!\n");
+		CLEAR();		
+		askConfig(game, player);
+	}
+}
 
 
 
