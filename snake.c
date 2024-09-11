@@ -8,7 +8,7 @@
 #define BOARD_HEIGHT 20
 #define BOARD_WIDTH 30
 #define FRUIT_CH 'F'
-#define TIMESTEP 120
+#define TIMESTEP 200
 #define BORDER_CHAR '#'
 #endif
 

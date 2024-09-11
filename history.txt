@@ -1,1 +1,2 @@
-USER:goku SCORE:0
+USER:goku SCORE:80  
+R:son gohan SCORE:20  

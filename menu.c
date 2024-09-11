@@ -32,17 +32,22 @@ void startGame(game_settings_t * game){
 	//the player will only be allowed to play if they press ENTER 	
 	printf("SNAKE GAME  \nPress ENTER to start...\n");
 	
-	
-	x = getchar();
-	
-	/*while(x != '\n' ){
-		printf("Press ENTER to start\n");
+	int temp=0;
+	while(!temp){
 		x = getchar();
-	}*/
-	if(x == '\n'){
-		checkPlayer(game);
+		if(x==('\n')){
+			temp =1;
+		}
+		else{
+			printf("Please enter ENTER\n");
+			cleanStdin();
+		}
 	}
-	cleanStdin();
+	checkPlayer(game);
+	
+
+	
+	
 }
 	
 void checkPlayer(game_settings_t *game){
@@ -350,7 +355,7 @@ void configureGame (game_settings_t * game, char player[]){
 			flag++;
 		}
 	}
-
+	CLEAR();
 	game->configured =1;
 	cleanStdin();
 	snakeGame(game);
