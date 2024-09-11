@@ -51,10 +51,7 @@ void snakeGame(game_settings_t * game){
         movement(p2snake, game);
         collisionscheck(p2snake, game, &game_over);
         draw(game, p2snake);
-        #ifdef WINDOWS
-        Sleep(game->timestep);  // delay
-        #else
-        #endif
+
 
     }
     endgame(game,p2snake);
@@ -77,6 +74,7 @@ void game_setup(game_settings_t * game){
     //THIS MUST BE DELETED ONCE MENU IS DONE
     game->board_height = BOARD_HEIGHT;
     game->board_width = BOARD_WIDTH;
+    game->board_char = BORDER_CHAR;
     game->fruit_ch=FRUIT_CH;
     game->life= LIFE;
     game->snake_body= SNAKE_BODY;
@@ -84,9 +82,9 @@ void game_setup(game_settings_t * game){
     game->snake_length= SNAKE_LENGTH;
     game->timestep= TIMESTEP;
     game->user_name = NAME;
-    game->board_char = BORDER_CHAR
+    
     //TILL HERE
-;
+
 
 
 }
@@ -214,6 +212,7 @@ void movement(snake_t *snake, game_settings_t *game) {
     #ifdef WINDOWS
 
     if(kbhit()) {//this is to make the game not to be paused every time it gets here
+        sleep(game->timestep);
         ch = getch();
         
         if(ch=='w' && snake->dir.y !=1) {
@@ -228,9 +227,10 @@ void movement(snake_t *snake, game_settings_t *game) {
         else if(ch=='d'&& snake->dir.x !=-1) {
             snake->dir.x = 1; snake->dir.y = 0;
         }
+        
     }
     #else
-   timeout(200);//this is to make the game not to be paused every time it gets here
+   timeout(game->timestep);//make getch wait for a maximum of miliseconds and if not key is pressed, it returns EOF, but the game goes on
     ch = getch();
     if(ch=='w' && snake->dir.y !=1) {
         snake->dir.x = 0; snake->dir.y = -1;
@@ -304,7 +304,7 @@ void yummy(game_settings_t * game, snake_t * snake){
     }
 
 }
-#ifdef WINDOWS//ncurses has this function integrated in mvprintw
+#ifdef WINDOWS//ncurses has this function integrated in mvprintw. moves the cursor to x,y coordinates
 void gotoxy(int x, int y) {
     COORD coord;
     coord.X = x;

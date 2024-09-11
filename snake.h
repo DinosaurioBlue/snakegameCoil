@@ -1,23 +1,5 @@
 #ifndef SNAKE_H
 #define SNAKE_H
-//includes and struct definitions
-
-
-/*Here it changes wether you are in linux or windows*/
-/*#ifdef WINDOWS
-#include<windows.h>
-#include<conio.h>
-#define CLEAR() system("cls")
-void gotoxy(int x, int y);
-#else
-#include<ncurses.h>
-#define CLEAR() clear()
-#endif
-//general inlcudes
-#include<time.h>
-#include<stdlib.h>
-#include<stdio.h>*/
-
 //struct definitions
 typedef struct {
     const char * user_name;
