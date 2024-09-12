@@ -1,3 +1,5 @@
-USER:goku SCORE:80  
-R:son gohan SCORE:20  
+USER:goku SCORE:190 
+R:son gohan SCORE:70  
 USER:newuserrrrrr SCORE:60  
+USER:f SCORE:190 
+USER:franco SCORE:0

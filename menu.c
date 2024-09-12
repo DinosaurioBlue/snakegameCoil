@@ -6,6 +6,7 @@
 #include"score.h"
 #include"menu.h"
 #include"snake.h"
+#include <ctype.h>
 #define MIN_SIZE 4
 #define MAX_SIZE 64
 #define MAX_SNAKE 15
@@ -13,7 +14,8 @@
 #define MIN_LIFE 1
 #define MAX_LIFE 5
 #define MIN_TIME 1
-#define MAX_TIME 200
+#define MAX_TIME 300
+#define badinput (ARE YOU TRYING TO BREAK THE GAME, TRY AGAIN!!!)
 
 #ifdef WINDOWS
 #include<windows.h>
@@ -264,7 +266,7 @@ void configureGame (game_settings_t * game, char player[]){
 		}
 	}
 	flag = temp =0;//restarting values
-	printf("how wide would you like the board to be?\n");//wide
+	printf("how wide would you like the board to be? recommended 1.5 times the hight\n");//wide
 	while(!flag){
 		if(scanf("%d",&temp)!=1){
 			printf("please enter an integer from %d to %d\n",MIN_SIZE,MAX_SIZE);
@@ -282,20 +284,79 @@ void configureGame (game_settings_t * game, char player[]){
 	}
 	printf("what character would you like your board to use?\n");//border character
 	cleanStdin();
-	temp = getchar();
+	flag =0;
+	while(!flag){
+		temp = getchar();
+		if(!(isprint(temp))){
+			printf("ARE YOU TRYING TO BREAK THE GAME??? TRY AGAIN\n");
+			cleanStdin();
+		}
+		else if(!(iscntrl(temp))){
+			printf("ARE YOU TRYING TO BREAK THE GAME??? TRY AGAIN\n");
+			cleanStdin();
+		}
+		
+		else{
+		flag++;
+		}
+	}
+
+
+
 	game->board_char = (char)(temp);	
 
 	//configure snake
 	CLEAR();
 	printf("what character would you like the head of snake to be?\n");//snake head
 	cleanStdin();
-	temp = getchar();
+	flag =0;
+	while(!flag){
+		temp = getchar();
+		if(!(isprint(temp))){
+			printf("ARE YOU TRYING TO BREAK THE GAME??? TRY AGAIN\n");
+			cleanStdin();
+		}
+		else if(!(iscntrl(temp))){
+			printf("ARE YOU TRYING TO BREAK THE GAME??? TRY AGAIN\n");
+			cleanStdin();
+		}
+		
+		else{
+		flag++;
+		
+		}
+	
+	}
+	
+	
+	
+	
 	game->snake_head = (char)(temp);	
 
 	printf("what character would you like the body of snake to be?\n");//snake body
 	cleanStdin();
-	temp = getchar();
+	flag =0;
+	while(!flag){
+		temp = getchar();
+		if(!(isprint(temp))){
+			printf("ARE YOU TRYING TO BREAK THE GAME??? TRY AGAIN\n");
+			cleanStdin();
+		}
+		else if(!(iscntrl(temp))){
+			printf("ARE YOU TRYING TO BREAK THE GAME??? TRY AGAIN\n");
+			cleanStdin();
+		}
+		else{
+		flag++;
+		
+		}
+	
+	}
 	game->snake_body= (char)(temp);
+	
+	
+	
+	
 
 	printf("how long would you like your snake to be?\n");//initial snake size
 	flag = temp =0;//restarting values
@@ -320,7 +381,23 @@ void configureGame (game_settings_t * game, char player[]){
 	CLEAR();
 	printf("what character would you like the food to be?\n");//food apearrence
 	cleanStdin();
-	temp = getchar();
+	flag =0;
+	while(!flag){
+		temp = getchar();
+		if(!(isprint(temp))){
+			printf("ARE YOU TRYING TO BREAK THE GAME??? TRY AGAIN\n");
+			cleanStdin();
+		}
+		else if(!(iscntrl(temp))){
+			printf("ARE YOU TRYING TO BREAK THE GAME??? TRY AGAIN\n");
+			cleanStdin();
+		}
+		else{
+		flag++;
+		
+		}
+	
+	}
 	game->fruit_ch= (char)(temp);
 
 	//general game settings	

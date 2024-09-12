@@ -5,10 +5,10 @@
 #define SNAKE_HEAD '@'
 #define SNAKE_BODY 'O'
 #define LIFE 3
-#define BOARD_HEIGHT 20
-#define BOARD_WIDTH 30
+#define BOARD_HEIGHT 16
+#define BOARD_WIDTH 20
 #define FRUIT_CH 'F'
-#define TIMESTEP 200
+#define TIMESTEP 250
 #define BORDER_CHAR '#'
 #endif
 
@@ -48,7 +48,7 @@ void snakeGame(game_settings_t * game){
     fruit(game);
     //GAME LOOP
     while(!game_over){
-        movement(p2snake, game);
+        movement(p2snake, game, &game_over);
         collisionscheck(p2snake, game, &game_over);
         draw(game, p2snake);
 
@@ -93,6 +93,7 @@ void game_setup(game_settings_t * game){
 void kill_game (void){
     #ifndef WINDOWS
     endwin();
+    curs_set(1);
     #endif
 }
 void draw(game_settings_t* game,snake_t*snake){
@@ -101,12 +102,12 @@ void draw(game_settings_t* game,snake_t*snake){
     //printing borders
     #ifndef WINDOWS
     for (i = 0; i < game->board_width + 2; i++) {
-        mvprintw(0, i, "#");
-        mvprintw(game->board_height + 1, i, "#");
+        mvprintw(0, i, "%c",game->board_char);
+        mvprintw(game->board_height + 1, i, "%c",game->board_char);
     }
     for (i = 0; i < game->board_height + 2; i++) {
-        mvprintw(i, 0, "#");
-        mvprintw(i, game->board_width + 1, "#");
+        mvprintw(i, 0, "%c",game->board_char);
+        mvprintw(i, game->board_width + 1, "%c",game->board_char);
     }
     //printing score and life
     mvprintw(game->board_height+4,0,"your score is:%d",game->score);
@@ -128,13 +129,13 @@ void draw(game_settings_t* game,snake_t*snake){
         gotoxy(i, 0);
         printf("%c",);
         gotoxy(i, game->board_height + 1);
-        printf("#");
+        printf("%c",game->board_char);
     }
     for (i = 0; i < game->board_height + 2; i++) {
         gotoxy(0, i);
-        printf("#");
+        printf("%c",game->board_char);
         gotoxy(game->board_width + 1, i);
-        printf("#");
+        printf("%c",game->board_char);
     }
 
     // Printing score and life
@@ -159,6 +160,7 @@ void draw(game_settings_t* game,snake_t*snake){
 
 
 void InitializeSnake(snake_t *snake, game_settings_t * game) {//initializes snake
+
     snake->length= game->snake_length;
     snake->pos = (vector_t*)malloc((snake->length) * sizeof(vector_t));
     if (snake->pos == NULL) {
@@ -204,33 +206,20 @@ void endgame(game_settings_t * game,snake_t * snake){//end messagge and dealloca
     napms(2000);
     #endif
     mem_free(snake->pos);
+    kill_game();
 
 }
-void movement(snake_t *snake, game_settings_t *game) {
+void movement(snake_t *snake, game_settings_t *game, int * game_over) {
     // Handling user input for movement
     int ch;
     #ifdef WINDOWS
 
     if(kbhit()) {//this is to make the game not to be paused every time it gets here
-        sleep(game->timestep);
-        ch = getch();
-        
-        if(ch=='w' && snake->dir.y !=1) {
-            snake->dir.x = 0; snake->dir.y = -1;
-        }
-        else if(ch=='s'&& snake->dir.y !=-1) {
-            snake->dir.x = 0; snake->dir.y = 1;
-        }
-        else if(ch=='a'&& snake->dir.x !=1) {
-            snake->dir.x = -1; snake->dir.y = 0;
-        }
-        else if(ch=='d'&& snake->dir.x !=-1) {
-            snake->dir.x = 1; snake->dir.y = 0;
-        }
-        
+        sleep(game->timestep);        
     }
     #else
    timeout(game->timestep);//make getch wait for a maximum of miliseconds and if not key is pressed, it returns EOF, but the game goes on
+    #endif
     ch = getch();
     if(ch=='w' && snake->dir.y !=1) {
         snake->dir.x = 0; snake->dir.y = -1;
@@ -244,8 +233,10 @@ void movement(snake_t *snake, game_settings_t *game) {
     else if(ch=='d'&& snake->dir.x !=-1) {
         snake->dir.x = 1; snake->dir.y = 0;
     }
-
-    #endif
+    else if (ch == 'q' || ch == 'Q'){
+        *game_over =1;
+    }  
+    //while((ch = getchar())!='\n' && ch !=EOF);
 
     // Update snake position
     for(int i = snake->length - 1; i > 0; --i) {
@@ -299,8 +290,8 @@ void yummy(game_settings_t * game, snake_t * snake){
     snake->length += 1;//updates lenght
     resize(snake);//resizes
     fruit(game);
-    if(game->timestep>50){
-        game->timestep-=10;//makes the game faster until the timestep is 50ms
+    if(game->timestep>80){
+        game->timestep-=5;//makes the game faster until the timestep is 50ms
     }
 
 }
