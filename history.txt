@@ -1,2 +1,3 @@
 USER:goku SCORE:80  
 R:son gohan SCORE:20  
+USER:newuserrrrrr SCORE:60  
