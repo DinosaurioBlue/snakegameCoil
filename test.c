@@ -1,10 +1,9 @@
-#include"snake.h"
-#include"menu.h"
+#include"input.h"
+#include<stdio.h>
 
 int main (void){
-    game_settings_t game;
-    game_settings_t * p2game;
-    p2game = &game;
-    configureGame(p2game,"goku");
+    char x;
+   x =receiveChar();
+   printf("Your char is: %c\n",x);
     return 0;
 }
