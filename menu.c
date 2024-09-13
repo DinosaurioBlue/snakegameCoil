@@ -8,12 +8,12 @@
 #include"snake.h"
 #define MIN_SIZE 4
 #define MAX_SIZE 64
-#define MAX_SNAKE 15
+#define MAX_SNAKE 20
 #define MIN_SNAKE 1
 #define MIN_LIFE 1
 #define MAX_LIFE 5
-#define MIN_TIME 1
-#define MAX_TIME 200
+#define MIN_TIME 30
+#define MAX_TIME 300
 
 #ifdef WINDOWS
 #include<windows.h>
@@ -282,19 +282,49 @@ void configureGame (game_settings_t * game, char player[]){
 	}
 	printf("what character would you like your board to use?\n");//border character
 	cleanStdin();
-	temp = getchar();
+	flag =0;
+	while(!flag){
+		temp = getchar();
+		if((33<=temp)&&(temp<=126)){
+			++flag;
+		}
+		else{
+			printf("Please enter a valid character");
+			cleanStdin();
+		}
+	}
 	game->board_char = (char)(temp);	
 
 	//configure snake
 	CLEAR();
 	printf("what character would you like the head of snake to be?\n");//snake head
 	cleanStdin();
-	temp = getchar();
+	flag =0;
+	while(!flag){
+		temp = getchar();
+		if((33<=temp)&&(temp<=126)){
+			++flag;
+		}
+		else{
+			printf("Please enter a valid character");
+			cleanStdin();
+		}
+	}
 	game->snake_head = (char)(temp);	
 
 	printf("what character would you like the body of snake to be?\n");//snake body
 	cleanStdin();
-	temp = getchar();
+	flag =0;
+	while(!flag){
+		temp = getchar();
+		if((33<=temp)&&(temp<=126)){
+			++flag;
+		}
+		else{
+			printf("Please enter a valid character");
+			cleanStdin();
+		}
+	}
 	game->snake_body= (char)(temp);
 
 	printf("how long would you like your snake to be?\n");//initial snake size
@@ -320,7 +350,17 @@ void configureGame (game_settings_t * game, char player[]){
 	CLEAR();
 	printf("what character would you like the food to be?\n");//food apearrence
 	cleanStdin();
-	temp = getchar();
+	flag =0;
+	while(!flag){
+		temp = getchar();
+		if((33<=temp)&&(temp<=126)){
+			++flag;
+		}
+		else{
+			printf("Please enter a valid character");
+			cleanStdin();
+		}
+	}
 	game->fruit_ch= (char)(temp);
 
 	//general game settings	
