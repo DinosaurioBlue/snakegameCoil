@@ -1,5 +1,5 @@
-snake: main.o snake.o menu.o score.o input.o
-	gcc -Wall -o snake main.o snake.o menu.o score.o input.o -lncurses
+snake: main.o snake.o menu.o score.o 
+	gcc -Wall -o snake main.o snake.o menu.o score.o  -lncurses
 
 main.o: main.c snake.h score.h menu.h
 	gcc -Wall -c main.c
@@ -7,8 +7,8 @@ main.o: main.c snake.h score.h menu.h
 snake.o: snake.c snake.h
 	gcc -Wall -c snake.c
 
-input.o: input.c input.h
-	gcc -Wall -c input.c
+:  
+	gcc -Wall -c 
 	
 menu.o: menu.c menu.h
 	gcc -Wall -c menu.c
@@ -24,8 +24,8 @@ clean:
 s:	test.c snake.o menu.o score.o test.c
 	gcc -Wall -o s snake.o test.c menu.o score.o -lncurses
 #every target starting with 'w' is for compiling in windows only
-wsnake: wmain.o wsnake.o wmenu.o wscore.o input.o
-	gcc -Wall -o wsnake wmain.o wsnake.o wmenu.o wscore.o input.o
+wsnake: wmain.o wsnake.o wmenu.o wscore.o 
+	gcc -Wall -o wsnake wmain.o wsnake.o wmenu.o wscore.o 
 
 wmain.o: main.c snake.h menu.h score.h
 	gcc -Wall -c -o wmain.o main.c
@@ -47,5 +47,5 @@ ws:	test.c snake.c snake.h
 	gcc -Wall -D WINDOWS -o s snake.c test.c
 
 #testing
-test: test.c input.c input.h
-	gcc -Wall -o test test.c input.c
+#test: test.c  
+#	gcc -Wall -o test test.c .c
