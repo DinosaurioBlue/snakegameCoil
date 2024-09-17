@@ -65,6 +65,7 @@ void game_setup(game_settings_t * game){
     cbreak();  // Disable line buffering
     noecho();  // Don't echo input
     curs_set(0); // Hide the cursor
+    nodelay(stdscr,TRUE);
     #else
     CLEAR();
     #endif
@@ -218,11 +219,12 @@ void movement(snake_t *snake, game_settings_t *game, int * game_over) {
         sleep(game->timestep);     
     }
     #else
-   halfdelay(game->timestep/100);//make getch wait for a maximum of miliseconds and if not key is pressed, it returns EOF, but the game goes on
+   napms(game->timestep);
    #endif
     ch = getch();
-
-   switch(ch) {
+    static int previous;
+    if(ch!=previous){
+        switch(ch) {
     case 'W':
     case 'w':
         if (snake->dir.y != 1) {
@@ -261,8 +263,12 @@ void movement(snake_t *snake, game_settings_t *game, int * game_over) {
     default:
         fflush(stdin);
         break;
-}
-
+        }
+    }
+    else{
+        fflush(stdin);
+    }
+    previous = ch;
 
 
 
