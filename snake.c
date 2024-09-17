@@ -2,7 +2,7 @@
 #define SNAKE_LENGTH 1
 #define SNAKE_HEAD '@'
 #define SNAKE_BODY 'O'
-#define LIFE 3
+#define LIFE 10
 #define BOARD_HEIGHT 20
 #define BOARD_WIDTH 30
 #define FRUIT_CH 'F'
@@ -16,10 +16,12 @@
 #include<windows.h>
 #include<conio.h>
 #define CLEAR() system("cls")
+#define GOTOSLEEP() sleep(1000)
 void gotoxy(int x, int y);
 #else
 #include<ncurses.h>
 #define CLEAR() clear()
+#define GOTOSLEEP() napms(1000)
 #endif
 //general inlcudes
 #include<time.h>
@@ -222,8 +224,7 @@ void movement(snake_t *snake, game_settings_t *game, int * game_over) {
    napms(game->timestep);
    #endif
     ch = getch();
-    static int previous;
-    if(ch!=previous){
+    if(ch!=ERR){
         switch(ch) {
     case 'W':
     case 'w':
@@ -258,17 +259,19 @@ void movement(snake_t *snake, game_settings_t *game, int * game_over) {
     case 'q':
         *game_over = 1;
         break;
-    case ERR:
-        break;
+        case 'p':
+        case 'P': while((ch=LOWCASE(getchar()))!='p'){
+            GOTOSLEEP();
+        }
     default:
-        fflush(stdin);
+        int c;
+        GOTOSLEEP();//pausing a second 
+        while((c=getch()!=EOF));//clearing the buffer
+
         break;
         }
     }
-    else{
-        fflush(stdin);
-    }
-    previous = ch;
+    
 
 
 
