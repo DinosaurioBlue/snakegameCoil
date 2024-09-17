@@ -102,8 +102,8 @@ void draw(game_settings_t* game,snake_t*snake){
     //printing borders
     #ifndef WINDOWS
     for (i = 0; i < game->board_width + 2; i++) {
-        mvprintw(0, i, "%C"),game->board_char;
-        mvprintw(game->board_height + 1, i, "%C"),game->board_char;
+        mvprintw(0, i, "%C",game->board_char);
+        mvprintw(game->board_height + 1, i, "%C",game->board_char);
     }
     for (i = 0; i < game->board_height + 2; i++) {
         mvprintw(i, 0, "%C",game->board_char);
