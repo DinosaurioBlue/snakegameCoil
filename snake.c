@@ -102,40 +102,40 @@ void draw(game_settings_t* game,snake_t*snake){
     //printing borders
     #ifndef WINDOWS
     for (i = 0; i < game->board_width + 2; i++) {
-        mvprintw(0, i, "#");
-        mvprintw(game->board_height + 1, i, "#");
+        mvprintw(0, i, "%C"),game->board_char;
+        mvprintw(game->board_height + 1, i, "%C"),game->board_char;
     }
     for (i = 0; i < game->board_height + 2; i++) {
-        mvprintw(i, 0, "#");
-        mvprintw(i, game->board_width + 1, "#");
+        mvprintw(i, 0, "%C",game->board_char);
+        mvprintw(i, game->board_width + 1, "%C",game->board_char);
     }
     //printing score and life
     mvprintw(game->board_height+4,0,"your score is:%d",game->score);
     mvprintw(game->board_height+5,0,"your lifes are:%d",game->life);
 
     //printing snake
-    mvprintw(snake->pos[0].y,snake->pos[0].x,"%c",game->snake_head);
+    mvprintw(snake->pos[0].y,snake->pos[0].x,"%C",game->snake_head);
     for(i=1;i<snake->length;++i){
-        mvprintw(snake->pos[i].y,snake->pos[i].x,"%c",game->snake_body);
+        mvprintw(snake->pos[i].y,snake->pos[i].x,"%C",game->snake_body);
     }
 
     //printing fruit
-    mvprintw(game->fruit_y, game->fruit_x, "%c", game->fruit_ch);
+    mvprintw(game->fruit_y, game->fruit_x, "%C", game->fruit_ch);
 
 
 
     #else//windows draw's function
     for (i = 0; i < game->board_width + 2; i++) {
         gotoxy(i, 0);
-        printf("%c",);
+        printf("%C",);
         gotoxy(i, game->board_height + 1);
-        printf("#");
+        printf("%C",game->board_char);
     }
     for (i = 0; i < game->board_height + 2; i++) {
         gotoxy(0, i);
-        printf("#");
+        printf("%C",game->board_char);
         gotoxy(game->board_width + 1, i);
-        printf("#");
+        printf("%C",game->board_char);
     }
 
     // Printing score and life
@@ -146,15 +146,15 @@ void draw(game_settings_t* game,snake_t*snake){
 
     // Printing snake
     gotoxy(snake->pos[0].x, snake->pos[0].y);
-    printf("%c", game->snake_head);
+    printf("%C", game->snake_head);
     for(i=1; i<snake->length; ++i){
         gotoxy(snake->pos[i].x, snake->pos[i].y);
-        printf("%c", game->snake_body);
+        printf("%C", game->snake_body);
     }
 
     // Printing fruit
     gotoxy(game->fruit_x, game->fruit_y);
-    printf("%c",game->fruit_ch);
+    printf("%C",game->fruit_ch);
     #endif
 }
 
@@ -259,8 +259,7 @@ void movement(snake_t *snake, game_settings_t *game, int * game_over) {
     case ERR:
         break;
     default:
-        int temp;
-        while((temp = getchar()!='\n') && temp !=EOF);//clear the buffer
+        fflush(stdin);
         break;
 }
 
