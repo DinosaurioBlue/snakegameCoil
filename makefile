@@ -6,9 +6,6 @@ main.o: main.c snake.h score.h menu.h
 
 snake.o: snake.c snake.h
 	gcc -Wall -c snake.c
-
-:  
-	gcc -Wall -c 
 	
 menu.o: menu.c menu.h
 	gcc -Wall -c menu.c
