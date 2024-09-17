@@ -18,7 +18,7 @@
 #define CLEAR() system("cls")
 #define GOTOSLEEP() sleep(1000)
 void gotoxy(int x, int y);
-#define ERR -1
+#define ERR -1// error code
 #else
 #include<ncurses.h>
 #define CLEAR() clear()
