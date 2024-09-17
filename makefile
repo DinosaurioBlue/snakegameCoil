@@ -20,9 +20,6 @@ clean:
 	rm -rf *.o 
 	rm snake
 	rm s
-#s is a quick test for just the snake game itself
-s:	test.c snake.o menu.o score.o test.c
-	gcc -Wall -o s snake.o test.c menu.o score.o -lncurses
 #every target starting with 'w' is for compiling in windows only
 wsnake: wmain.o wsnake.o wmenu.o wscore.o 
 	gcc -Wall -o wsnake wmain.o wsnake.o wmenu.o wscore.o 
@@ -42,10 +39,3 @@ wscore.o: score.c score.h
 wclean:
 	rm -rf *.o 
 	rm wsnake
-
-ws:	test.c snake.c snake.h
-	gcc -Wall -D WINDOWS -o s snake.c test.c
-
-#testing
-#test: test.c  
-#	gcc -Wall -o test test.c .c
