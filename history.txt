@@ -3,4 +3,5 @@ R:son gohan SCORE:160
 USER:newuserrrrrr SCORE:160 
 USER:f SCORE:190 
 USER:franco SCORE:160 
-USER:frido SCORE:10  
+USER:frido SCORE:100 
+USER:ana2 SCORE:10  

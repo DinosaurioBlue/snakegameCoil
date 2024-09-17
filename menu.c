@@ -39,7 +39,7 @@ void startGame(game_settings_t * game){
 			temp =1;
 		}
 		else{
-			printf("Please enter ENTER\n");
+			printf("Please press ENTER\n");
 			cleanStdin();
 		}
 	}
@@ -91,7 +91,7 @@ void signUp(game_settings_t *game){
 	FILE* pFile;//pointer to a file
 	FILE* ptrCheck;
 
-	
+	CLEAR();
 	printf("Enter your name: "); //asks for the username
 	fgets(player, sizeof(player), stdin);
 	player[strcspn(player, "\n")] = '\0'; // Remove newline character
@@ -125,11 +125,12 @@ void signUp(game_settings_t *game){
 	}
 	
 	else{
+		CLEAR();
 		printf("Name already used. Try again! \n");
 		//goes to menu again
 		checkPlayer(game);
 	}
-
+	
 	askConfig(game, player);
 }
 
@@ -143,6 +144,7 @@ void login(game_settings_t *game){
 	int log = 0;
 	FILE *ptr = fopen("history.txt", "r");
 	
+	CLEAR();
 	if(ptr == NULL){
 		perror("Error opening file");
 	} 
@@ -192,6 +194,7 @@ void top_score(game_settings_t *game){
 	int count = 0, i, x;
 	FILE *pScan = fopen("history.txt", "r");
 	
+	CLEAR();
 	if(pScan == NULL){
 		perror("Error opening file");
 	} 	
@@ -415,17 +418,21 @@ void askConfig(game_settings_t*game, char player[]){
 	x=getchar();
 	if(x=='Y' || x== 'y'){
 		CLEAR();
+		cleanStdin();
 		configureGame(game, player);
 		
 	}
 	else if(x=='N' || x== 'n'){
 		CLEAR();
+		cleanStdin();
 		snakeGame(game);
+		cleanStdin();
 		updateScore(game, player);
 	}
 	else{
 		printf("Invalid option, try again!\n");
 		CLEAR();		
+		cleanStdin();
 		askConfig(game, player);
 	}
 }
