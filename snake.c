@@ -260,9 +260,7 @@ void movement(snake_t *snake, game_settings_t *game, int * game_over) {
         *game_over = 1;
         break;
         case 'p':
-        case 'P': while((ch=LOWCASE(getchar()))!='p'){
-            GOTOSLEEP();
-        }
+        case 'P':   while(getch()!='p');
     default:
         int c;
         GOTOSLEEP();//pausing a second 
