@@ -59,7 +59,8 @@
   "files.associations": {
     "ncurses.h": "c",
     "snake.h": "c",
-    "TEMP.C": "cpp"
+    "TEMP.C": "cpp",
+    "stdio.h": "c"
   },
   "makefile.configureOnOpen": false
 }

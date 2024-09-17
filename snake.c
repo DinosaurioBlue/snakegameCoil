@@ -10,6 +10,7 @@
 #define BORDER_CHAR '#'
 #define TIME_MAX 30
 
+
 /*Here it changes wether you are in linux or windows*/
 #ifdef WINDOWS
 #include<windows.h>
@@ -24,6 +25,8 @@ void gotoxy(int x, int y);
 #include<time.h>
 #include<stdlib.h>
 #include<stdio.h>
+#define LOWCASE(c) ('a'<=(c) && (c)<='z' ? (c) : ((c)+'A'-'a') )
+
 
 
 
@@ -61,7 +64,6 @@ void game_setup(game_settings_t * game){
     initscr(); // Start ncurses mode
     cbreak();  // Disable line buffering
     noecho();  // Don't echo input
-    keypad(stdscr, TRUE); // Enable special keys
     curs_set(0); // Hide the cursor
     #else
     CLEAR();
@@ -201,12 +203,14 @@ void endgame(game_settings_t * game,snake_t * snake){//end messagge and dealloca
     mvprintw(0,0,"Game Over! Your score was %d\n", game->score);
     refresh();
     napms(2000);
+    curs_set(1);
     #endif
     mem_free(snake->pos);
+    
 
 }
 void movement(snake_t *snake, game_settings_t *game, int * game_over) {
-    // Handling user input for movement
+
     int ch;
     #ifdef WINDOWS
 
@@ -214,24 +218,53 @@ void movement(snake_t *snake, game_settings_t *game, int * game_over) {
         sleep(game->timestep);     
     }
     #else
-   timeout(game->timestep);//make getch wait for a maximum of miliseconds and if not key is pressed, it returns EOF, but the game goes on
+   halfdelay(game->timestep/100);//make getch wait for a maximum of miliseconds and if not key is pressed, it returns EOF, but the game goes on
    #endif
     ch = getch();
-    if(ch=='w' && snake->dir.y !=1) {
-        snake->dir.x = 0; snake->dir.y = -1;
-    }
-    else if(ch=='s'&& snake->dir.y !=-1) {
-        snake->dir.x = 0; snake->dir.y = 1;
-    }
-    else if(ch=='a'&& snake->dir.x !=1) {
-        snake->dir.x = -1; snake->dir.y = 0;
-    }
-    else if(ch=='d'&& snake->dir.x !=-1) {
-        snake->dir.x = 1; snake->dir.y = 0;
-    }
-    else if((ch=='q')||(ch=='Q')){
-        *game_over =1;
-    }
+
+   switch(ch) {
+    case 'W':
+    case 'w':
+        if (snake->dir.y != 1) {
+            snake->dir.x = 0;
+            snake->dir.y = -1;
+        }
+        break;
+    case 'S':
+    case 's':
+        if (snake->dir.y != -1) {
+            snake->dir.x = 0;
+            snake->dir.y = 1;
+        }
+        break;
+    case 'A':
+    case 'a':
+        if (snake->dir.x != 1) {
+            snake->dir.x = -1;
+            snake->dir.y = 0;
+        }
+        break;
+    
+    case 'D':
+    case 'd':
+        if (snake->dir.x != -1) {
+            snake->dir.x = 1;
+            snake->dir.y = 0;
+        }
+        break;
+    case 'Q':
+    case 'q':
+        *game_over = 1;
+        break;
+    case ERR:
+        break;
+    default:
+        int temp;
+        while((temp = getchar()!='\n') && temp !=EOF);//clear the buffer
+        break;
+}
+
+
 
 
     // Update snake position
@@ -271,9 +304,8 @@ void collision(game_settings_t * game, snake_t * snake, int * game_over){
             (game->snake_length)=SNAKE_LENGTH;
             free(snake->pos);
             InitializeSnake(snake,game);
-            game->score-=20;
-            if(game->score<0){//this make the socre not to be negative
-                game->score =0;
+            if(game->score>=20){//this make the score not to be negative
+                game->score-=20;
             }
         }
         else{

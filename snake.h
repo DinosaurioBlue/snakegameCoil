@@ -6,14 +6,14 @@ typedef struct {
     char snake_body;
     char board_char;
     char fruit_ch;
-    int score;
-    int life;
-    int snake_length;
+    unsigned int score;
+    unsigned int life;
+    unsigned int snake_length;
     unsigned int board_height;
     unsigned int board_width;
-    int fruit_x;
-    int fruit_y;
-    int timestep;
+    unsigned int fruit_x;
+    unsigned fruit_y;
+    unsigned int timestep;
     unsigned int configured;
 } game_settings_t;
 
@@ -27,7 +27,7 @@ typedef struct
 typedef struct {
     vector_t * pos;
     vector_t dir;
-    int length;
+    unsigned int length;
 } snake_t;
 
 
