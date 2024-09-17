@@ -60,5 +60,6 @@
     "ncurses.h": "c",
     "snake.h": "c",
     "TEMP.C": "cpp"
-  }
+  },
+  "makefile.configureOnOpen": false
 }
