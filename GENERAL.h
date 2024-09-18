@@ -36,7 +36,7 @@ typedef enum{
 
 
 typedef struct {
-    const char * userName;
+    char * userName;
     char snakeHead;
     char snakeBody;
     char boardChar;

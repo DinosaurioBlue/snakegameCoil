@@ -1,4 +1,63 @@
+/*This source code makes all the backend, user doesn't see nothingh from here*/
+
+//general includes
+#include"GENERAL.h"
+#include"BACKEND.h"
+#include"FRONTEND.h"
 #include<stdio.h>
+#include<time.h>
+
+
+
+
+//conditional compilation
+#ifdef WINDOWS
+#define SLEEP(t) (sleep((t)))
+#include<conio.h>
+#include<windows.h>
+#else
+#define SLEEP(t) (napms((t)))
+#include<ncurses.h>
+#endif
+
+
+
+//default settings
+#define SNAKE_LENGTH 1
+#define LIFE 10
+#define BOARD_HEIGHT 20
+#define BOARD_WIDTH 30
+#define TIMESTEP 200
+#define TIME_MAX 30
+#define NAME_MAX 50
+
+
+
+/*THIS WORKS AS MAIN GAME LOOP*///Game loop
+
+void GameLoop(game_settings_t * game){
+    //initial settings
+    bool game_over=0;
+   	SetupFront(game);//initializes ncurses mode
+    SetupBack(game);
+}
+void SetupBack(game_settings_t * game){
+    game->score =0;
+
+    if(!game->configured){
+        game->boardHeight = BOARD_HEIGHT;
+        game->boardWidth = BOARD_WIDTH;
+        game->life= LIFE;
+        game->snakeLength= SNAKE_LENGTH;
+        game->timeStep= TIMESTEP;
+        
+    }
+
+
+
+}
+
+
 
 
 //function that starts the menu
@@ -6,8 +65,9 @@ void StartMenu(game_settings_t *game){
 	char x;
 	game->configured = 0;
 	//funcion q imprime
-	if(//funcione q pide char){
-		CheckPlayer(game_settings_t *game);
+	if(1){//funcione q pide char)
+		
+		CheckPlayer(game);
 	}
 }
 
@@ -16,26 +76,27 @@ void StartMenu(game_settings_t *game){
 //function that goes to the selected option of the menu
 void CheckPlayer(game_settings_t *game){
 	//funcion q imprime 
-	x=//funcion q pide char
+	char x;
+	x=funcion1();//funcion q pide char
 	if(x == 'l' || x == 'L'){
 		cleanStdin();
-		LoginPlayer(game_settings_t *game);
+		LoginPlayer(game);
 	}
 	else if(x == 's' || x == 'S'){
 		cleanStdin();
-		SignupPlayer(game_settings_t *game);
+		SignupPlayer(game);
 	}
 	else if(x == 't' || x == 'T'){
 		cleanStdin();
-		TopScores(game_settings_t *game);		
+		TopScores(game);		
 	}
 	else{
 		//funcion q imprime 
 		cleanStdin();
 		//stays in menu
-		checkPlayer(game_settings_t *game);
+		checkPlayer(game);
 	}
-	AskConfiguration(game_settings_t *game, game->userName);
+	AskConfiguration(game);
 }
 
 
@@ -75,7 +136,7 @@ void SignupPlayer(game_settings_t *game){
 	}
 	else{
 		//funcion q imprime
-		CheckPlayer(game_settings_t *game);
+		CheckPlayer(game);
 	
 	}
 
@@ -94,14 +155,10 @@ void LoginPlayer(game_settings_t *game){
 	} 
 	else{
 		//funcion que imprime
-		game->userName=//funcion que pide string
+		game->userName=ReceiveStr();//funcion que pide string
 		
-		//get rid of 'enter' in the player's username
-		for(int i = 0; i < NAME_MAX; i++){
-			if(game->userName[i] == '\n'){
-				game->userName[i] = 0;
-			}
-		}
+		
+		
 		
 		while(fgets(buffer, sizeof(buffer), ptr) != NULL){
 			//stores the text that reads in the .txt and then compares it to the player name 
@@ -114,11 +171,11 @@ void LoginPlayer(game_settings_t *game){
 	}
 	if(log){
 		//funcion que imprime 
-		AskConfiguration(game_settings_t *game, game->userName);
+		AskConfiguration(game, game->userName);
 	}
 	else{
 		//funcion que imprime
-		CheckPlayer(game_settings_t *game);
+		CheckPlayer(game);
 	}
 }
 
@@ -142,7 +199,7 @@ void TopScores(game_settings_t *game){
 		
 		if(game->userName != NULL && game->score!= NULL) {
 		//copies the name of the player. USER: = 5. Sets the pointer to the first character of the name
-			sscanf(name + 5, "%s", game->userName); 
+			sscanf(game->userName + 5, "%s", game->userName); 
 			//copies the score of the player. SCORE: = 6. Sets the pointer to the number 
 			sscanf(score + 6, "%d", game->score);
 			count++;
@@ -155,7 +212,7 @@ void TopScores(game_settings_t *game){
 	
 	
 	//sort players by score
-	qsort(game->userName, count, sizeof(game_settings_t), ComparePlayer);
+	qsort(game->userName, count, sizeof(game_settings_t), ComparePlayer());
 
 	//llamar funcion de frontend
 	//PrintTopScores(game, count)
