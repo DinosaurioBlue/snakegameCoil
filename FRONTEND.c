@@ -11,21 +11,29 @@
 #include<windows.h>
 #include<conio.h>
 #define CLEAR() system("cls")//clearing terminal
-#define CLEAN() system("cls") 
+#define CLEANING() system("cls") 
 void gotoxy(int x, int y);//definition of funciton
 #define ERR -1// error code
 #else
 #include<ncurses.h>
 #include<termios.h>
-#define CLEAR() system("clear")//termios.h
-#define CLEAN() clear()//ncurses.h
+#define CLEANING() system("clear")//termios.h
+#define CLEAR() clear()//ncurses.h
 #endif
 
 
 
-
+//macros
 #define LOWCASE(c) ('a'<=(c) && (c)<='z' ? (c) : ((c)+'A'-'a') )
+
+
+//defines
 #define MAX_NAME 50
+#define SNAKE_HEAD '@'
+#define SNAKE_BODY 'O'
+#define FRUIT_CH 'F'
+#define BORDER_CHAR '#'
+
 
 
 
@@ -151,7 +159,7 @@ void CleanStdin(void){
 
 
 
-void SetupFront (void){
+void SetupFront (game_settings_t * game){
     #ifndef WINDOWS
     initscr(); // Start ncurses mode
     cbreak();  // Disable line buffering
@@ -159,5 +167,21 @@ void SetupFront (void){
     curs_set(0); // Hide the cursor
     nodelay(stdscr,TRUE);
     #endif
+
+
+    if(!game->configured){
+        game->boardChar = BORDER_CHAR;
+        game->fruitCh=FRUIT_CH;
+        game->snakeBody= SNAKE_BODY;
+        game->snakeHead=SNAKE_HEAD;
     CLEAR();
+    }
+}
+
+void KillScreen (void){//only at the end of ncurses mode
+    #ifndef WINDOWS
+    endwin();
+    curs_set(1);
+    #endif
+    CLEANING();//TERMIOS CALL IF YOU ARE ON LINUX
 }

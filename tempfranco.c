@@ -16,14 +16,10 @@
 
 //default settings
 #define SNAKE_LENGTH 1
-#define SNAKE_HEAD '@'
-#define SNAKE_BODY 'O'
 #define LIFE 10
 #define BOARD_HEIGHT 20
 #define BOARD_WIDTH 30
-#define FRUIT_CH 'F'
 #define TIMESTEP 200
-#define BORDER_CHAR '#'
 #define TIME_MAX 30
 
 
@@ -37,5 +33,17 @@ void GameLoop(game_settings_t * game){
     SetupBack(game);
 }
 void SetupBack(game_settings_t * game){
+    game->score =0;
+
+    if(!game->configured){
+        game->boardHeight = BOARD_HEIGHT;
+        game->boardWidth = BOARD_WIDTH;
+        game->life= LIFE;
+        game->snakeLength= SNAKE_LENGTH;
+        game->timeStep= TIMESTEP;
+        
+    }
+
+
 
 }

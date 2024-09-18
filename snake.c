@@ -100,6 +100,7 @@ void kill_game (void){
     endwin();
     curs_set(1);
     #endif
+    CLEAR();
 }
 void draw(game_settings_t* game,snake_t*snake){
     CLEAR();//erasing screen
