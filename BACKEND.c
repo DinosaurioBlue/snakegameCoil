@@ -1,93 +1,72 @@
-#include "backend.h"
-#include <stdlib.h>
+#include<stdio.h>
 
-// Snake variables
-#define WIDTH 20
-#define HEIGHT 20
-#define SNAKE_MAX_LENGTH 100
+int main(void){
 
-typedef struct {
-    int x, y;
-} Position;
 
-Position snake[SNAKE_MAX_LENGTH];
-int snake_length;
-Position food;
-int direction;  // 0 = up, 1 = right, 2 = down, 3 = left
-int game_over;
 
-void initialize_game() {
-    // Initialize snake
-    snake_length = 3;
-    for (int i = 0; i < snake_length; i++) {
-        snake[i].x = WIDTH / 2;
-        snake[i].y = HEIGHT / 2 + i;
-    }
-
-    // Place initial food
-    place_food();
-
-    // Initialize direction and game state
-    direction = 1;  // Snake starts moving right
-    game_over = 0;
 }
 
-void place_food() {
-    food.x = rand() % WIDTH;
-    food.y = rand() % HEIGHT;
+//function to clear buffer 
+void cleanStdin(void){
+	int temp;
+	while((temp = getchar())!='\n' && temp !=EOF);//clear the buffer
 }
 
-void update_game_state() {
-    // Move the snake by updating the position of each segment
-    Position new_head = snake[0];
 
-    if (direction == 0) new_head.y--;
-    else if (direction == 1) new_head.x++;
-    else if (direction == 2) new_head.y++;
-    else if (direction == 3) new_head.x--;
 
-    // Check collisions with walls
-    if (new_head.x < 0 || new_head.x >= WIDTH || new_head.y < 0 || new_head.y >= HEIGHT) {
-        game_over = 1;
-        return;
-    }
-
-    // Check collisions with itself
-    for (int i = 0; i < snake_length; i++) {
-        if (snake[i].x == new_head.x && snake[i].y == new_head.y) {
-            game_over = 1;
-            return;
-        }
-    }
-
-    // Move snake's body
-    for (int i = snake_length - 1; i > 0; i--) {
-        snake[i] = snake[i - 1];
-    }
-
-    // Update the head position
-    snake[0] = new_head;
-
-    // Check if the snake has eaten food
-    if (snake[0].x == food.x && snake[0].y == food.y) {
-        snake_length++;
-        increase_score();
-        place_food();
-    }
+//function that starts the menu
+void StartMenu(__){
+	char x;
+	game->configured = 0;
+	//funcion q imprime
+	if(//funcione q pide char){
+		CheckPlayer(__);
+	}
 }
 
-int check_game_over() {
-    return game_over;
+
+
+//function that goes to the selected option of the menu
+void CheckPlayer(__){
+	//funcion q imprime 
+	x=//funcion q pide char
+	if(x == 'l' || x == 'L'){
+		cleanStdin();
+		login(__);
+	}
+	else if(x == 's' || x == 'S'){
+		cleanStdin();
+		SignupPlayer(__);
+	}
+	else if(x == 't' || x == 'T'){
+		cleanStdin();
+		top_score(__);		
+	}
+	else{
+		//funcion q imprime 
+		cleanStdin();
+		//stays in menu
+		checkPlayer(__);
+	}
 }
 
-Position* get_snake() {
-    return snake;
+
+
+//function fo a new player to sign up
+void SignupPlayer(__){
+		
+
+
 }
 
-int get_snake_length() {
-    return snake_length;
-}
 
-Position get_food() {
-    return food;
-}
+
+
+
+
+
+
+
+
+
+
