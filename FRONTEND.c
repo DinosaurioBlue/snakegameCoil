@@ -1,6 +1,9 @@
 /*This is source code for frontend*/
 
+
+//general inlcudes
 #include"GENERAL.h"
+#include"BACKEND.h"
 
 
 //conditional compilation
@@ -17,12 +20,12 @@ void gotoxy(int x, int y);//definition of funciton
 #define CLEAR() system("clear")//termios.h
 #define CLEAN() clear()//ncurses.h
 #endif
-//general inlcudes
+
 
 
 
 #define LOWCASE(c) ('a'<=(c) && (c)<='z' ? (c) : ((c)+'A'-'a') )
-
+#define MAX_NAME 50
 
 
 
@@ -118,7 +121,7 @@ input_t GetInput(void){
     }   
    #endif
 
-   
+
    do {
     ch = getch();
     switch(ch) {
@@ -139,4 +142,9 @@ input_t GetInput(void){
     default:    ch = ERR;   break;
     }
     } while (ch != ERR);
+}
+
+void CleanStdin(void){
+	int temp;
+	while((temp = getchar())!='\n' && temp !=EOF);//clear the buffer
 }
