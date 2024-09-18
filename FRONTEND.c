@@ -148,3 +148,16 @@ void CleanStdin(void){
 	int temp;
 	while((temp = getchar())!='\n' && temp !=EOF);//clear the buffer
 }
+
+
+
+void SetupFront (void){
+    #ifndef WINDOWS
+    initscr(); // Start ncurses mode
+    cbreak();  // Disable line buffering
+    noecho();  // Don't echo input
+    curs_set(0); // Hide the cursor
+    nodelay(stdscr,TRUE);
+    #endif
+    CLEAR();
+}
