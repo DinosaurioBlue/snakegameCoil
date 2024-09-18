@@ -82,7 +82,7 @@ void checkPlayer(game_settings_t *game){
 
 }
 
-
+/*
 //this function signs up new players
 void signUp(game_settings_t *game){
 	char trash[500];
@@ -132,11 +132,11 @@ void signUp(game_settings_t *game){
 	}
 	
 	askConfig(game, player);
-}
+}*/
 
 
 
-
+/*
 //this function checks if the player already exists and they log in 
 void login(game_settings_t *game){
 	char player[NAME_MAX];
@@ -182,10 +182,10 @@ void login(game_settings_t *game){
 	}
 	
 	
-}
+}*/
 
-
-/*Function to display players in order from the highiest score to the lowest*/
+/*
+//Function to display players in order from the highiest score to the lowest//
 void top_score(game_settings_t *game){
 	player_t player[NAME_MAX];
 	char *name;
@@ -221,6 +221,8 @@ void top_score(game_settings_t *game){
 	//sort players by score
 	qsort(player, count, sizeof(player_t), comparePlayer);
 	
+	
+//FRONTEND
 	//prints the player with their score in descending order
 	printf("TOP SCORES: \n");
 	for(i=0; i<count; i++){
@@ -234,17 +236,19 @@ void top_score(game_settings_t *game){
 		checkPlayer(game);
 	}
 	
-}
+}*/
 
+
+/*
 //function to compare two elements (scores) to use qsort function 
 int comparePlayer(const void * a, const void * b){
 	//converts two void pointers to type player_t 
 	player_t *pA = (player_t *)a;
 	player_t *pB = (player_t *)b;
 	return (pB->score - pA->score);
-}
+}*/
 
-
+/*
 //function to configure game settings
 void configureGame (game_settings_t * game, char player[]){
 	int flag =0;
@@ -399,19 +403,23 @@ void configureGame (game_settings_t * game, char player[]){
 		}
 	}
 	CLEAR();
-	game->configured =1;
+	game->configured=1;
 	cleanStdin();
-	snakeGame(game);
-	updateScore(game, player);
 		
-}
+}*/
+
+
+/*FRONTEND
 void cleanStdin(void){
 	int temp;
 	while((temp = getchar())!='\n' && temp !=EOF);//clear the buffer
-}
+}*/
 
-void askConfig(game_settings_t*game, char player[]){
+
+
+/*bool askConfig(game_settings_t*game, char player[]){
 	int x;
+	bool flag;
 	printf("Would you like to configure the game?\n");
 	printf("[Y]\n[N]\n");
 	
@@ -419,6 +427,7 @@ void askConfig(game_settings_t*game, char player[]){
 	if(x=='Y' || x== 'y'){
 		CLEAR();
 		cleanStdin();
+		flag =1;
 		configureGame(game, player);
 		
 	}
@@ -435,7 +444,8 @@ void askConfig(game_settings_t*game, char player[]){
 		cleanStdin();
 		askConfig(game, player);
 	}
-}
+	return flag;
+}*/
 
 
 
