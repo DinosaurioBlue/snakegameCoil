@@ -3,7 +3,11 @@
 #define FRONTEND_H
 #include "GENERAL.h"
 
-void draw(game_settings_t* game,snake_t*snake);
+
+
+void Draw(game_settings_t* game,snake_t*snake);
+
+input_t GetInput(void);
 
 
 

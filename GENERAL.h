@@ -29,6 +29,8 @@ typedef enum{
     RIGHT,
     PAUSE,
     RESTART,
+    NO_KEY,
+    QUIT
 } input_t;
 
 
@@ -44,7 +46,7 @@ typedef struct {
     unsigned int snakeLength;
     unsigned int boardHeight;
     unsigned int boardWidth;
-    vector_t fruitCordinate;
+    vector_t fruitCoord;
     unsigned int timeStep;
     _Bool configured;
     time_t  gameTime;
