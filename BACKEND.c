@@ -60,7 +60,7 @@ void GameLoop(game_settings_t * game){
 
 
     }
-    EndGame();
+    EndGame(game);
 	FreeMem(snake.pos);
 
 

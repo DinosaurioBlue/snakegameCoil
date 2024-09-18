@@ -471,7 +471,7 @@ void ConfigurationPlayer(game_settings_t * game){
 *                function to en the game                   *
 * 														   *
 ***********************************************************/
-void EndGame(game_settings_t * game,snake_t * snake){//end messagge and deallocates memory
+void EndGame(game_settings_t * game){//end messagge and deallocates memory
     CLEAR();
     #ifdef WINDOWS
     GoToxy(0,0);

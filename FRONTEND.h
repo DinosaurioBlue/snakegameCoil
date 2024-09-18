@@ -18,7 +18,7 @@ void ReceiveStr(char *str);
 void startGame(game_settings_t * game);
 void PrintTopscores(int cantPlayers);
 void ConfigurationPlayer(game_settings_t * game);
-void EndGame(game_settings_t * game,snake_t * snake);
+void EndGame(game_settings_t * game);
 
 
 
