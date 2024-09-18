@@ -1,3 +1,3 @@
-#ifndef FRONTEMD
-#define FRONTEMD
+#ifndef FRONTEND
+#define FRONTEND
 #endif

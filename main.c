@@ -1,6 +1,6 @@
 //includes 
-#include"snake.h"
-#include"menu.h"
+#include"frontend.h"
+#include"backend.h"
 //main function
 int main (void){
     game_settings_t game;
