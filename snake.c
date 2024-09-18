@@ -37,7 +37,7 @@ void gotoxy(int x, int y);
 
 
 
-/*THIS WORKS AS MAIN GAME LOOP*/
+/*THIS WORKS AS MAIN GAME LOOP*///Game loop
 
 void snakeGame(game_settings_t * game){
 
