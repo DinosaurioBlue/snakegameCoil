@@ -55,6 +55,7 @@ void snakeGame(game_settings_t * game){
         movement(p2snake, game, &game_over);
         collisionscheck(p2snake, game, &game_over);
         draw(game, p2snake);
+        napms(game->timestep);
 
 
     }
@@ -222,11 +223,11 @@ void movement(snake_t *snake, game_settings_t *game, int * game_over) {
         sleep(game->timestep);     
     }
     #else
-   napms(game->timestep);
+   
    #endif
+   do {
     ch = getch();
-    if(ch!=ERR){
-        switch(ch) {
+    switch(ch) {
     case 'W':
     case 'w':
         if (snake->dir.y != 1) {
@@ -260,16 +261,20 @@ void movement(snake_t *snake, game_settings_t *game, int * game_over) {
     case 'q':
         *game_over = 1;
         break;
-        case 'p':
-        case 'P':   while(getch()!='p');
-    default:
-        int c;
+    case 'p':
+    case 'P':
+        while(getch()!='p');
+    default:break;
+    /*    int c;
         GOTOSLEEP();//pausing a second 
         while((c=getch()!=EOF));//clearing the buffer
 
-        break;
+        
         }
+    */
     }
+    } while (ch != ERR);
+
     
 
 
