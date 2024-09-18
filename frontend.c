@@ -1,93 +1,74 @@
+#include "frontend.h"
 #include "backend.h"
-#include <stdlib.h>
+#include <ncurses.h>
 
-// Snake variables
-#define WIDTH 20
-#define HEIGHT 20
-#define SNAKE_MAX_LENGTH 100
+// Render the game screen
+void render_screen() {
+    clear();
 
-typedef struct {
-    int x, y;
-} Position;
+    // Get the snake and food positions
+    Position* snake = get_snake();
+    int snake_length = get_snake_length();
+    Position food = get_food();
 
-Position snake[SNAKE_MAX_LENGTH];
-int snake_length;
-Position food;
-int direction;  // 0 = up, 1 = right, 2 = down, 3 = left
-int game_over;
-
-void initialize_game() {
-    // Initialize snake
-    snake_length = 3;
+    // Draw the snake
     for (int i = 0; i < snake_length; i++) {
-        snake[i].x = WIDTH / 2;
-        snake[i].y = HEIGHT / 2 + i;
+        mvprintw(snake[i].y, snake[i].x, "O");
     }
 
-    // Place initial food
-    place_food();
+    // Draw the food
+    mvprintw(food.y, food.x, "X");
 
-    // Initialize direction and game state
-    direction = 1;  // Snake starts moving right
-    game_over = 0;
+    // Draw the border
+    for (int i = 0; i < WIDTH; i++) {
+        mvprintw(0, i, "#");
+        mvprintw(HEIGHT - 1, i, "#");
+    }
+    for (int i = 0; i < HEIGHT; i++) {
+        mvprintw(i, 0, "#");
+        mvprintw(i, WIDTH - 1, "#");
+    }
+
+    // Show the score
+    mvprintw(HEIGHT, 0, "Score: %d", get_score());
+
+    refresh();
 }
 
-void place_food() {
-    food.x = rand() % WIDTH;
-    food.y = rand() % HEIGHT;
-}
+// Handle user input for snake movement
+void handle_input() {
+    int ch = getch();
 
-void update_game_state() {
-    // Move the snake by updating the position of each segment
-    Position new_head = snake[0];
-
-    if (direction == 0) new_head.y--;
-    else if (direction == 1) new_head.x++;
-    else if (direction == 2) new_head.y++;
-    else if (direction == 3) new_head.x--;
-
-    // Check collisions with walls
-    if (new_head.x < 0 || new_head.x >= WIDTH || new_head.y < 0 || new_head.y >= HEIGHT) {
-        game_over = 1;
-        return;
-    }
-
-    // Check collisions with itself
-    for (int i = 0; i < snake_length; i++) {
-        if (snake[i].x == new_head.x && snake[i].y == new_head.y) {
-            game_over = 1;
-            return;
-        }
-    }
-
-    // Move snake's body
-    for (int i = snake_length - 1; i > 0; i--) {
-        snake[i] = snake[i - 1];
-    }
-
-    // Update the head position
-    snake[0] = new_head;
-
-    // Check if the snake has eaten food
-    if (snake[0].x == food.x && snake[0].y == food.y) {
-        snake_length++;
-        increase_score();
-        place_food();
+    switch (ch) {
+        case KEY_UP:
+            if (direction != 2) direction = 0;  // Up
+            break;
+        case KEY_RIGHT:
+            if (direction != 3) direction = 1;  // Right
+            break;
+        case KEY_DOWN:
+            if (direction != 0) direction = 2;  // Down
+            break;
+        case KEY_LEFT:
+            if (direction != 1) direction = 3;  // Left
+            break;
     }
 }
 
-int check_game_over() {
-    return game_over;
+// Display the game over screen
+void display_game_over() {
+    clear();
+    mvprintw(HEIGHT / 2, WIDTH / 2 - 5, "GAME OVER");
+    mvprintw(HEIGHT / 2 + 1, WIDTH / 2 - 5, "Final Score: %d", get_score());
+    refresh();
+    getch();  // Wait for user input
 }
 
-Position* get_snake() {
-    return snake;
-}
-
-int get_snake_length() {
-    return snake_length;
-}
-
-Position get_food() {
-    return food;
+// Display the menu
+void show_menu() {
+    clear();
+    mvprintw(HEIGHT / 2, WIDTH / 2 - 5, "SNAKE GAME");
+    mvprintw(HEIGHT / 2 + 1, WIDTH / 2 - 5, "Press any key to start");
+    refresh();
+    getch();  // Wait for user input
 }
