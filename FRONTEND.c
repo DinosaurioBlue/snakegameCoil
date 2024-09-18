@@ -7,14 +7,12 @@
 
 
 //conditional compilation
-#ifndef USERNAME
-#define USERNAME
 #ifdef WINDOWS
 #include<windows.h>
 #include<conio.h>
 #define CLEAR() system("cls")//clearing terminal
 #define CLEANING() system("cls") 
-void gotoxy(int x, int y);//definition of funciton
+void GoToxy(int x, int y);//definition of funciton
 #define ERR -1// error code
 #else
 #include<ncurses.h>
@@ -24,13 +22,8 @@ void gotoxy(int x, int y);//definition of funciton
 #endif
 
 
-
-//macros
-#define LOWCASE(c) ('a'<=(c) && (c)<='z' ? (c) : ((c)+'A'-'a') )
-
-
 //defines
-#define MAX_NAME 50
+#define NAME_MAX 50
 #define SNAKE_HEAD '@'
 #define SNAKE_BODY 'O'
 #define FRUIT_CH 'F'
@@ -46,7 +39,7 @@ void gotoxy(int x, int y);//definition of funciton
 //functions definitions
 
 #ifdef WINDOWS//moves cursor
-void gotoxy(int x, int y) {
+void GoToxy(int x, int y) {
     COORD coord;
     coord.X = x;
     coord.Y = y;
@@ -89,34 +82,34 @@ void Draw(game_settings_t* game,snake_t*snake){
 
     #else//windows draw's function
     for (i = 0; i < game->boardWidth + 2; i++) {
-        gotoxy(i, 0);
+        GoToxy(i, 0);
         printf("%C",);
-        gotoxy(i, game->boardHeight + 1);
+        GoToxy(i, game->boardHeight + 1);
         printf("%C",game->boardChar);
     }
     for (i = 0; i < game->boardHeight + 2; i++) {
-        gotoxy(0, i);
+        GoToxy(0, i);
         printf("%C",game->boardChar);
-        gotoxy(game->boardWidth + 1, i);
+        GoToxy(game->boardWidth + 1, i);
         printf("%C",game->boardChar);
     }
 
     // Printing score and life
-    gotoxy(0, game->boardHeight + 3);
+    GoToxy(0, game->boardHeight + 3);
     printf("Score: %d", game->score);
-    gotoxy(0, game->boardHeight + 4);
+    GoToxy(0, game->boardHeight + 4);
     printf("Lives: %d", game->life);
 
     // Printing snake
-    gotoxy(snake->pos[0].x, snake->pos[0].y);
+    GoToxy(snake->pos[0].x, snake->pos[0].y);
     printf("%C", game->snake_head);
     for(i=1; i<snake->length; ++i){
-        gotoxy(snake->pos[i].x, snake->pos[i].y);
+        GoToxy(snake->pos[i].x, snake->pos[i].y);
         printf("%C", game->snakeBody);
     }
 
     // Printing fruit
-    gotoxy(game->fruit_x, game->fruit_y);
+    GoToxy(game->fruit_x, game->fruit_y);
     printf("%C",game->fruitCh);
     #endif
 }
@@ -188,35 +181,308 @@ void KillScreen (void){//only at the end of ncurses mode
     CLEANING();//TERMIOS CALL IF YOU ARE ON LINUX
 }
 
-void updateScore(game_settings_t *game, const char *player){
-	char buffer[200];
-	char *scorePosition;
-	int old_score;
-	int score = game->score;
-	unsigned long int position;
-	FILE *pChange = fopen("history.txt", "r+");
-	
-	if(pChange == NULL){
-		perror("Failed to open file");
+//functions that prints on screen 
+void PrintScreen(const char *string){
+	printf("%s\n", string);
+}
+
+
+//function for the user to press ENTER
+void ReceiveEnter(void){
+	int temp=0;
+	while(!temp){
+		x = getchar();
+		if(x==('\n')){
+			temp =1;
+		}
+		else{
+			printf("Please press ENTER\n");
+			cleanStdin();
+		}
 	}
+}
+
+
+//function to receive specific chars from user
+char ReceiveChar(int num_chars, ...){
+	int temp=0, i;
+	char x, valid_char;
 	
-//Read each line and update the player's score if it's higher than the old one
-	while(fgets(buffer, sizeof(buffer), pChange) != NULL){
-		if(strstr(buffer, player) != NULL){
-			scorePosition = strstr(buffer, "SCORE:");
-			if(scorePosition){ 
-			//reads the player's old score
-				sscanf(scorePosition + 6 , "%d", &old_score); 
-				if(score > old_score){  
-					position = ftell(pChange);  
-					//sets the pointer in the right position to change the player's score
-					fseek(pChange, position - strlen(buffer) + (scorePosition - buffer) + 6, SEEK_SET);
-					//changes to new score
-					fprintf(pChange, "%-4d\n", score);
-				}	
+	va_list args;
+	
+	while(!temp){
+		x=getchar();
+		cleanStdin();
+		
+		va_start(args, num_chars);
+		
+		for (int i = 0; i < num_chars; i++) {
+            valid_char = va_arg(args, int);
+            if(x==valid_char){
+				temp=1;
 			}
+		}
+		
+		va_end(args);
+		
+		if(!temp){
+			printf("Invalid option. Try Again!\n");
+		}
+	}
+	return x;
+}
+
+
+	
+//function to receive a string from user	
+void ReceiveStr(char *str){
+	int i;
+	fgets(str, NAME_MAX, stdin);
+	//get rid of 'enter' in string
+	for(i=0; i<NAME_MAX; i++){
+		if(str[i]=='\n'){
+			str[i]='\0';
+		}
+	}
+}
+
+
+
+
+void startGame(game_settings_t * game){
+	char x;
+	game->configured =0;
+	CLEAR();
+	//the player will only be allowed to play if they press ENTER 	
+	printf("SNAKE GAME  \nPress ENTER to start...\n");
+	
+	int temp=0;
+	while(!temp){
+		x = getchar();
+		if(x==('\n')){
+			temp =1;
+		}
+		else{
+			printf("Please press ENTER\n");
+			cleanStdin();
+		}
+	}
+	checkPlayer(game);
+
+
+
+
+
+//function that prints the player with their score in descending order
+void PrintTopscores(int cantPlayers){
+	printf("TOP SCORES: \n");
+	for(i=0; i<cantPlayes; i++){
+		printf("%s  ->  %d\n", game->username, game->score);
+	}
+	printf("\n\nPress ENTER to exit\n");
+	ReceiveEnter();		
+	//then goes to menu again 
+	CLEAR();
+	CheckPlayer(game);
+	}
+}
+
+
+
+/***********************************************************
+*														   *
+*      function to configure the game settings             *
+* 														   *
+***********************************************************/
+void ConfigurationPlayer(game_settings_t * game){
+	int flag =0;
+	int temp;	
+	CLEAR();
+	
+	//Configurate board
+	
+	//board height
+	printf("how tall would you like the board to be?\n");
+	while(!flag){
+		if(scanf("%d",&temp)!=1){
+			printf("please enter an integer from %d to %d\n",MIN_SIZE,MAX_SIZE);
+			cleanStdin();
+		}
+		else if((temp<MIN_SIZE)||(temp>MAX_SIZE)){
+			printf("please enter an integer from %d to %d\n",MIN_SIZE,MAX_SIZE);
+		}
+		else{
+			game->boardHeight = (temp);
+			flag++;
 		}
 	}
 	
-	fclose(pChange);
+	//board width
+	flag = temp =0;	//restarting values
+	printf("how wide would you like the board to be?\n");
+	while(!flag){
+		if(scanf("%d",&temp)!=1){
+			printf("please enter an integer from %d to %d\n",MIN_SIZE,MAX_SIZE);
+			cleanStdin();
+		}
+		else if((temp<MIN_SIZE)||(temp>MAX_SIZE)){
+			printf("please enter an integer from %d to %d\n",MIN_SIZE,MAX_SIZE);
+		}
+		else{
+			game->boardWidth = (temp);
+			flag++;
+		}
+		
+		
+	}
+
+	//border character
+	printf("what character would you like your board to use?\n");
+	cleanStdin();
+	flag =0;
+	while(!flag){
+		temp = getchar();
+		if(('!'<=temp)&&(temp<='~')){
+			++flag;
+		}
+		else{
+			printf("Please enter a valid character");
+			cleanStdin();
+		}
+	}
+	game->boardchar = (char)(temp);	
+
+	//configure snake
+	
+	//snake head
+	CLEAR();
+	printf("what character would you like the head of snake to be?\n");
+	cleanStdin();
+	flag =0;
+	while(!flag){
+		temp = getchar();
+		if(('!'<=temp)&&(temp<='~')){
+			++flag;
+		}
+		else{
+			printf("Please enter a valid character");
+			cleanStdin();
+		}
+	}
+	game->snakeHead = (char)(temp);	
+
+	//snake body
+	printf("what character would you like the body of snake to be?\n");
+	cleanStdin();
+	flag =0;
+	while(!flag){
+		temp = getchar();
+		if(('!'<=temp)&&(temp<='~')){
+			++flag;
+		}
+		else{
+			printf("Please enter a valid character");
+			cleanStdin();
+		}
+	}
+	game->snakeBody= (char)(temp);
+
+	//initial snake size
+	printf("how long would you like your snake to be?\n");
+	flag = temp =0; //restarting values
+	while(!flag){
+		if(scanf("%d",&temp)!=1){
+			printf("please enter an integer from %d to %d\n",MIN_SNAKE,MAX_SNAKE);
+			cleanStdin();
+		}
+		else if((temp<MIN_SNAKE)||(temp>MAX_SNAKE)){
+			printf("please enter an integer from %d to %d\n",MIN_SNAKE,MAX_SNAKE);
+		}
+		else{
+			game->snakeLength = (temp);
+			flag++;
+		}
+	}
+	
+
+	//configure foood
+	
+	//food apearrence
+	CLEAR();
+	printf("what character would you like the food to be?\n");
+	cleanStdin();
+	flag =0;
+	while(!flag){
+		temp = getchar();
+		if(('!'<=temp)&&(temp<='~')){
+			++flag;
+		}
+		else{
+			printf("Please enter a valid character");
+			cleanStdin();
+		}
+	}
+	game->fruitCh= (char)(temp);
+
+	//general game settings	
+	
+	//initial lifes
+	printf("how many lifes would you like to have?\n");
+	flag = temp =0;//restarting values
+	while(!flag){
+		if(scanf("%d",&temp)!=1){
+			printf("please enter an integer from %d to %d\n",MIN_LIFE,MAX_LIFE);
+			cleanStdin();
+		}
+		else if((temp<MIN_LIFE)||(temp>MAX_LIFE)){
+			printf("please enter an integer from %d to %d\n",MIN_LIFE,MAX_LIFE);
+		}
+		else{
+			game->life = (temp);
+			flag++;
+		}
+	}
+	
+	//time step
+	printf("how many many miliseconds would you like the timestep to be?\n");
+	flag = temp =0;//restarting values
+	while(!flag){
+		if(scanf("%d",&temp)!=1){
+			printf("please enter an integer from %d to %d\n",MIN_TIME,MAX_TIME);
+			cleanStdin();
+		}
+		else if((temp<MIN_TIME)||(temp>MAX_TIME)){
+			printf("please enter an integer from %d to %d\n",MIN_TIME,MAX_TIME);
+		}
+		else{
+			game->timeStep = (temp);
+			flag++;
+		}
+	}
+	CLEAR();
+	game->configured=1;
+	cleanStdin();		
+}
+
+
+
+/***********************************************************
+*														   *
+*                function to en the game                   *
+* 														   *
+***********************************************************/
+void EndGame(game_settings_t * game,snake_t * snake){//end messagge and deallocates memory
+    CLEAR();
+    #ifdef WINDOWS
+    GoToxy(0,0);
+    printf("Game Over! Your score was %d\n", game->score);
+    #else
+    mvprintw(0,0,"Game Over! Your score was %d\n", game->score);
+    refresh();
+    curs_set(1);
+    #endif
+	SLEEP(2000);
+	CLEAR();
+    
+
 }

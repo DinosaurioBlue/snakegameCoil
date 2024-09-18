@@ -1,4 +1,4 @@
-/*Function that updates a user's score if he got a higher one*/
+/*Function that updates a user's score if they got a higher one*/
 
 #include<stdio.h>
 #include<string.h>
@@ -6,7 +6,7 @@
 #include"snake.h"
 
 
-void updateScore(game_settings_t *game, const char *player){
+void updateScore(game_settings_t *game){
 	char buffer[200];
 	char *scorePosition;
 	int old_score;
@@ -20,7 +20,7 @@ void updateScore(game_settings_t *game, const char *player){
 	
 //Read each line and update the player's score if it's higher than the old one
 	while(fgets(buffer, sizeof(buffer), pChange) != NULL){
-		if(strstr(buffer, player) != NULL){
+		if(strstr(buffer, game->userName) != NULL){
 			scorePosition = strstr(buffer, "SCORE:");
 			if(scorePosition){ 
 			//reads the player's old score

@@ -7,12 +7,19 @@
 
 void Draw(game_settings_t* game,snake_t*snake);
 
-void updateScore(game_settings_t *, const char *player);
-
 input_t GetInput(void);
 void CleanStdin(void);
 void SetupFront (game_settings_t * game);
 void KillScreen (void);
+void PrintScreen(const char *string);
+void ReceiveEnter(void);
+char ReceiveChar(int num_chars, ...);
+void ReceiveStr(char *str);
+void startGame(game_settings_t * game);
+void PrintTopscores(int cantPlayers);
+void ConfigurationPlayer(game_settings_t * game);
+void EndGame(game_settings_t * game,snake_t * snake);
+
 
 
 
