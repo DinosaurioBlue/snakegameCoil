@@ -13,6 +13,7 @@ void Resize(snake_t * snake);
 void CheckCollision(snake_t * snake, game_settings_t * game, int * gameOver);
 void HasCollide(game_settings_t * game, snake_t * snake, int * gameOver);
 void Growth(game_settings_t * game, snake_t * snake);
+void TimeScoreInc(game_settings_t * game);
 
 
 

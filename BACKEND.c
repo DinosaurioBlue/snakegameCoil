@@ -31,7 +31,12 @@
 #define TIMESTEP 200
 #define TIME_MAX 30
 #define NAME_MAX 50
-
+#define SCORE_DIVIDER 20
+#define SCORE_TIME_INC 1
+#define SCORE_EATING 10
+#define SCORE_COLLIDE 10
+#define MIN_TIMESTEP 20
+#define SPEED_INCREASMENT 20
 
 
 /*THIS WORKS AS MAIN GAME LOOP*///Game loop
@@ -50,6 +55,7 @@ void GameLoop(game_settings_t * game){
         MoveSnake(p2snake, game, &game_over);
         CheckCollision(p2snake, game, &game_over);
         Draw(game, p2snake);
+		TimeScoreInc(game);
 		SLEEP(game->timeStep);
 
 
@@ -196,7 +202,7 @@ void CheckCollision(snake_t *snake, game_settings_t *game, int * gameOver) {
     // Check for self-collision
     for(int i = 1; i < snake->length; i++) {
         if(snake->pos[0].x == snake->pos[i].x && snake->pos[0].y == snake->pos[i].y) {
-            Hascolide(game, snake, gameOver);
+            Hascollide(game, snake, gameOver);
         }
     }
 
@@ -215,8 +221,8 @@ void HasCollide(game_settings_t * game, snake_t * snake, int * gameOver){
             (game->snakeLength)=SNAKE_LENGTH;
             FreeMem(snake->pos);
             InitializeSnake(snake,game);
-            if(game->score>=20){//this make the score not to be negative
-                game->score-=20;
+            if(game->score >= MIN_TIMESTEP){//this make the score not to be negative
+                game->score-=SPEED_INCREASMENT;
             }
         }
         else{
@@ -225,7 +231,7 @@ void HasCollide(game_settings_t * game, snake_t * snake, int * gameOver){
 
 }
 void Growth(game_settings_t * game, snake_t * snake){
-    game->score += 10;//updates score
+	game->score += SCORE_EATING;
     snake->length += 1;//updates lenght
     Resize(snake);//resizes
     SpawnFruit(game);
@@ -234,7 +240,15 @@ void Growth(game_settings_t * game, snake_t * snake){
     }
 
 }
+void TimeScoreInc(game_settings_t * game){//updating score regarding timestep
+	static int cont;
+	cont++;
+	if(!(cont%SCORE_DIVIDER)){//when the cont is divisible by SCORE_DIVIDER
+							  //it increases the score by one
+		game->score += 1;
+	}
 
+}
 
 
 
