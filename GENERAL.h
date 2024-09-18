@@ -49,6 +49,7 @@ typedef struct {
     vector_t fruitCoord;
     unsigned int timeStep;
     _Bool configured;
+    bool    restarted;
     time_t  gameTime;
 } game_settings_t;
 

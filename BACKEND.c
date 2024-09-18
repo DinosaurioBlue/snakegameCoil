@@ -4,8 +4,9 @@
 #include"GENERAL.h"
 #include"BACKEND.h"
 #include"FRONTEND.h"
-#include<stdio.h>
+#include<stdlib.h>
 #include<time.h>
+
 
 
 
@@ -40,11 +41,46 @@ void GameLoop(game_settings_t * game){
     bool game_over=0;
    	SetupFront(game);//initializes ncurses mode
     SetupBack(game);
+	static snake_t snake;
+    static snake_t * p2snake = &snake;
+    InitializeSnake(p2snake,game);
+    SpawnFruit(game);
+    //GAME LOOP
+    while(!game_over){
+        MoveSnake(p2snake, game, &game_over);
+        CheckCollision(p2snake, game, &game_over);
+        Draw(game, p2snake);
+		SLEEP(game->timeStep);
+
+
+    }
+    EndGame(game,p2snake);
+
+
+
+
+
+
+
+
 }
+/********************************************************************************
+ * 					end of Main game loop
+ * 
+ * *****************************************************************************/
 void SetupBack(game_settings_t * game){
     game->score =0;
 
-    if(!game->configured){
+	static game_settings_t initialSetting;
+	if(!game->restarted){
+		initialSetting = *game;
+	}
+	else{ 
+		*game = initialSetting;
+		game->restarted=0;
+		}
+
+    if(!game->configured){//default settings
         game->boardHeight = BOARD_HEIGHT;
         game->boardWidth = BOARD_WIDTH;
         game->life= LIFE;
@@ -52,11 +88,176 @@ void SetupBack(game_settings_t * game){
         game->timeStep= TIMESTEP;
         
     }
+	
+	
+
 
 
 
 }
+void InitializeSnake(snake_t *snake, game_settings_t * game) {
 
+	//dinamic memory allocation
+    snake->length= game->snakeLength;
+    snake->pos = (vector_t*)malloc((snake->length) * sizeof(vector_t));
+    if (snake->pos == NULL) {
+        perror("Failed to allocate memory for snake");
+        exit(EXIT_FAILURE);
+    }
+	//We design a specific spawn for the snake
+    (snake->pos[0]).x = (game->boardHeight)/2;
+    (snake->pos[0]).y = (game->boardWidth)/2;
+    snake->dir.x=1;
+    snake->dir.y=0;
+
+
+}
+
+void SpawnFruit(game_settings_t *game) {
+    srand((unsigned int)time(NULL));  // Seed the random number generator
+    game->fruitCoord.x = rand() % game->boardWidth+1;
+    game->fruitCoord.y= rand() % game->boardWidth+1;
+}
+
+void MoveSnake(snake_t * snake, game_settings_t * game, int * gameOver){
+
+	input_t direction = GetInput();//receiving a direction
+	switch (direction)
+	{
+	case UP: if (snake->dir.y != 1) {
+            snake->dir.x = 0;
+            snake->dir.y = -1;
+        }
+		break;
+	case DOWN: if (snake->dir.y != -1) {
+            snake->dir.x = 0;
+            snake->dir.y = 1;
+        }
+		break;
+	case LEFT: if (snake->dir.x != 1) {
+            snake->dir.x = -1;
+            snake->dir.y = 0;
+        }
+		break;
+	case RIGHT: if (snake->dir.x != -1) {
+            snake->dir.x = 1;
+            snake->dir.y = 0;
+        }
+		break;
+	case QUIT: *gameOver = 1;
+		break;
+	case PAUSE: while(GetInput()!=PAUSE);
+		break;
+	case RESTART:{ 
+			game->restarted =1;
+			FreeMem(snake->pos);//we free dinamic memory, bad things could happen if not
+			SetupBack(game);//will set the snake to it's initial setting
+			InitializeSnake(snake, game);
+			
+		}
+		break;
+	default:
+		break;
+	}
+
+
+
+	
+	//update each tail part
+    for(int i = snake->length - 1; i > 0; --i) {
+        snake->pos[i] = snake->pos[i - 1];
+    }
+    snake->pos[0].x += snake->dir.x;
+    snake->pos[0].y += snake->dir.y;
+
+}
+void FreeMem(void *ptr) {
+    if (ptr != NULL) {
+        free(ptr);
+    }
+}
+void Resize(snake_t * snake){
+snake->pos=(vector_t*)realloc(snake->pos,snake->length*sizeof(vector_t));
+ if (snake->pos == NULL) {
+        perror("Failed to allocate memory for snake");
+        exit(EXIT_FAILURE);
+    }
+
+}
+void CheckCollision(snake_t *snake, game_settings_t *game, int * gameOver) {
+
+    // Check for wall collisions
+    if(snake->pos[0].x <= 0 || snake->pos[0].x >= game->boardWidth + 1 ||
+       snake->pos[0].y <= 0 || snake->pos[0].y >= game->boardHeight + 1) {
+        HasColide(game, snake, gameOver);
+    }
+
+    // Check for self-collision
+    for(int i = 1; i < snake->length; i++) {
+        if(snake->pos[0].x == snake->pos[i].x && snake->pos[0].y == snake->pos[i].y) {
+            Hascolide(game, snake, gameOver);
+        }
+    }
+
+    // Check if fruit is eaten,
+    if(snake->pos[0].x == game->fruitCoord.x && snake->pos[0].y == game->fruitCoord.y) {
+        Growth(game,snake);//what happens if a fruit is eaten??read below
+    }
+
+
+
+}
+void HasCollide(game_settings_t * game, snake_t * snake, int * gameOver){
+
+     if(game->life>1){//checks if you sill have lifes and sets the snake as new
+            --(game->life);
+            (game->snakeLength)=SNAKE_LENGTH;
+            FreeMem(snake->pos);
+            InitializeSnake(snake,game);
+            if(game->score>=20){//this make the score not to be negative
+                game->score-=20;
+            }
+        }
+        else{
+            *gameOver=1;
+        }
+
+}
+void Growth(game_settings_t * game, snake_t * snake){
+    game->score += 10;//updates score
+    snake->length += 1;//updates lenght
+    Resize(snake);//resizes
+    SpawnFruit(game);
+    if(game->timeStep>TIME_MAX){
+        game->timeStep -=10;//makes the game faster until the timestep is 50ms
+    }
+
+}
+
+void EndGame(game_settings_t * game,snake_t * snake){//end messagge and deallocates memory
+    CLEAR();
+    #ifdef WINDOWS
+    gotoxy(0,0);
+    printf("Game Over! Your score was %d\n", game->score);
+    Sleep(2000);
+    #else
+    mvprintw(0,0,"Game Over! Your score was %d\n", game->score);
+    refresh();
+    napms(2000);
+    curs_set(1);
+    #endif
+    mem_free(snake->pos);
+    
+
+}
+
+
+/********************************************************************************************************************************************
+*				here we separate game from the rest
+*
+*
+*
+*********************************************************************************************************************************************/
 
 
 
@@ -92,7 +293,7 @@ void CheckPlayer(game_settings_t *game){
 	}
 	else{
 		//funcion q imprime 
-		cleanStdin();
+		CleanStdin();
 		//stays in menu
 		checkPlayer(game);
 	}
@@ -171,7 +372,7 @@ void LoginPlayer(game_settings_t *game){
 	}
 	if(log){
 		//funcion que imprime 
-		AskConfiguration(game, game->userName);
+		AskConfiguration(game);
 	}
 	else{
 		//funcion que imprime
@@ -216,17 +417,10 @@ void TopScores(game_settings_t *game){
 
 	//llamar funcion de frontend
 	//PrintTopScores(game, count)
-
-
+}
 
 
 //function to compare two elements (scores) to use qsort function 
-int comparePlayer(const void * a, const void * b){
-	//converts two void pointers to type player_t 
-	player_t *pA = (player_t *)a;
-	player_t *pB = (player_t *)b;
-	return (pB->score - pA->score);
-}
 
 
 
