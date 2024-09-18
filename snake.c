@@ -217,6 +217,7 @@ void endgame(game_settings_t * game,snake_t * snake){//end messagge and dealloca
 void movement(snake_t *snake, game_settings_t *game, int * game_over) {
 
     int ch;
+    
     #ifdef WINDOWS
 
     if(kbhit()) {//this is to make the game not to be paused every time it gets here
