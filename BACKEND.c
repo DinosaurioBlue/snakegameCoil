@@ -234,22 +234,7 @@ void Growth(game_settings_t * game, snake_t * snake){
 
 }
 
-void EndGame(game_settings_t * game,snake_t * snake){//end messagge and deallocates memory
-    CLEAR();
-    #ifdef WINDOWS
-    gotoxy(0,0);
-    printf("Game Over! Your score was %d\n", game->score);
-    Sleep(2000);
-    #else
-    mvprintw(0,0,"Game Over! Your score was %d\n", game->score);
-    refresh();
-    napms(2000);
-    curs_set(1);
-    #endif
-    mem_free(snake->pos);
-    
 
-}
 
 
 /********************************************************************************************************************************************
