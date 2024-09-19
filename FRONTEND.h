@@ -16,7 +16,7 @@ void ReceiveEnter(void);
 char ReceiveChar(int num_chars, ...);
 void ReceiveStr(char *str);
 void startGame(game_settings_t * game);
-void PrintTopscores(int cantPlayers);
+void PrintTopscores(game_settings_t *game, int cantPlayers);
 void ConfigurationPlayer(game_settings_t * game);
 void EndGame(game_settings_t * game);
 

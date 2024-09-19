@@ -82,7 +82,7 @@ void checkPlayer(game_settings_t *game){
 
 }
 
-/*
+
 //this function signs up new players
 void signUp(game_settings_t *game){
 	char trash[500];
@@ -132,11 +132,11 @@ void signUp(game_settings_t *game){
 	}
 	
 	askConfig(game, player);
-}*/
+}
 
 
 
-/*
+
 //this function checks if the player already exists and they log in 
 void login(game_settings_t *game){
 	char player[NAME_MAX];
@@ -182,9 +182,7 @@ void login(game_settings_t *game){
 	}
 	
 	
-}*/
-
-/*
+}
 //Function to display players in order from the highiest score to the lowest//
 void top_score(game_settings_t *game){
 	player_t player[NAME_MAX];
@@ -417,7 +415,7 @@ void cleanStdin(void){
 
 
 
-/*bool askConfig(game_settings_t*game, char player[]){
+bool askConfig(game_settings_t*game, char player[]){
 	int x;
 	bool flag;
 	printf("Would you like to configure the game?\n");

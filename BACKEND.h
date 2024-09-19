@@ -26,6 +26,7 @@ void TopScores(game_settings_t *game);
 int comparePlayer(const void * a, const void * b);
 void AskConfiguration(game_settings_t *game);
 void ConfigureGame(game_settings_t *game);
+bool PlayAgain(game_settings_t *game)
 
 #endif
 

@@ -274,7 +274,7 @@ void startGame(game_settings_t * game){
 
 
 //function that prints the player with their score in descending order
-void PrintTopscores(int cantPlayers){
+void PrintTopscores(game_settings_t *game, int cantPlayers){
 	printf("TOP SCORES: \n");
 	for(i=0; i<cantPlayes; i++){
 		printf("%s  ->  %d\n", game->username, game->score);

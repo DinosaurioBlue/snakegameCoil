@@ -265,10 +265,10 @@ void TimeScoreInc(game_settings_t * game){//updating score regarding timestep
 void StartMenu(game_settings_t *game){
 	char x;
 	game->configured = 0;
-	//funcion q imprime
-	if(1){//funcione q pide char)
-		
-		CheckPlayer(game);
+	char msg[]="SNAKE GAME  \nPress ENTER to start...\n";
+	PrintScreen(msg);
+	ReceiveEnter();		
+	CheckPlayer(game);
 	}
 }
 
@@ -276,9 +276,10 @@ void StartMenu(game_settings_t *game){
 
 //function that goes to the selected option of the menu
 void CheckPlayer(game_settings_t *game){
-	//funcion q imprime 
-	char x;
-	x=funcion1();//funcion q pide char
+	char msg[]="[T] TOP SCORES\n[L] LOG IN\n[S] SIGN IN\n");
+	char x;	
+	PrintScreen(msg);
+	x=ReceiveChar(6, l, L, s, S, t, T);
 	if(x == 'l' || x == 'L'){
 		cleanStdin();
 		LoginPlayer(game);
@@ -287,15 +288,9 @@ void CheckPlayer(game_settings_t *game){
 		cleanStdin();
 		SignupPlayer(game);
 	}
-	else if(x == 't' || x == 'T'){
+	else{
 		cleanStdin();
 		TopScores(game);		
-	}
-	else{
-		//funcion q imprime 
-		CleanStdin();
-		//stays in menu
-		checkPlayer(game);
 	}
 	AskConfiguration(game);
 }
@@ -308,8 +303,10 @@ void SignupPlayer(game_settings_t *game){
 	int found = 0;
 	FILE* pFile;//pointer to a file
 	FILE* ptrCheck;
-	game->userName=//funcion que pide string
-	
+	char msg[]="Enter your name: ";
+	PrintScreen(msg);
+	ReceiveStr(game->userName);
+		
 	ptrCheck = fopen("history.txt", "r");//pointer to check if the username already exists
 	if(ptrCheck == NULL){
 		perror("Error opening file");
@@ -336,10 +333,12 @@ void SignupPlayer(game_settings_t *game){
 		fclose(pFile);//closes the file 
 	}
 	else{
-		//funcion q imprime
+		cleaning();
+		msg[]="Name already used. Try again!\n";
+		PrintScreen(msg);
 		CheckPlayer(game);
-	
 	}
+	AskConfiguration(game);
 
 }
 
@@ -349,18 +348,17 @@ void SignupPlayer(game_settings_t *game){
 void LoginPlayer(game_settings_t *game){
 	char buffer[500]; 
 	int log = 0;
+	char msg[];
 	FILE *ptr = fopen("history.txt", "r");
 	
 	if(ptr == NULL){
 		perror("Error opening file");
 	} 
 	else{
-		//funcion que imprime
-		game->userName=ReceiveStr();//funcion que pide string
-		
-		
-		
-		
+		msg[]="Enter yout username: ";
+		PrintScreen(msg);
+		ReceiveStr(game->userName);
+				
 		while(fgets(buffer, sizeof(buffer), ptr) != NULL){
 			//stores the text that reads in the .txt and then compares it to the player name 
 			if(strstr(buffer, game->userName) != NULL){
@@ -371,11 +369,13 @@ void LoginPlayer(game_settings_t *game){
 		fclose(ptr);
 	}
 	if(log){
-		//funcion que imprime 
+		msg[]="Welcome back!\n";
+		PrintScreen(msg); 
 		AskConfiguration(game);
 	}
 	else{
-		//funcion que imprime
+		msg[]="User not found. Try again!\n";
+		PrintScreen(msg);
 		CheckPlayer(game);
 	}
 }
@@ -388,7 +388,7 @@ void TopScores(game_settings_t *game){
 	int count = 0, i, x;
 	FILE *pScan = fopen("history.txt", "r");
 	
-	CLEAR();
+	cleaning();
 	if(pScan == NULL){
 		perror("Error opening file");
 	} 	
@@ -405,40 +405,43 @@ void TopScores(game_settings_t *game){
 			sscanf(score + 6, "%d", game->score);
 			count++;
 		}
-	}
-	
-	
-	
+	}	
 	fclose(pScan);	
 	
 	
 	//sort players by score
-	qsort(game->userName, count, sizeof(game_settings_t), ComparePlayer());
-
-	//llamar funcion de frontend
-	//PrintTopScores(game, count)
+	qsort(game->userName, count, sizeof(game_settings_t), ComparePlayer);
+	
+	PrintTopScores(game, count);
 }
 
 
 //function to compare two elements (scores) to use qsort function 
+int ComparePlayer(const void *a, const void *b) {
+    // Cast the pointers to game_settings_t
+    game_settings_t *playerA = (game_settings_t *)a;
+    game_settings_t *playerB = (game_settings_t *)b;
+
+    // Compare scores in descending order (higher score first)
+    return playerB->score - playerA->score;
+}
+
 
 
 
 //function that determines whether the playes wants to configure the game or not  
 void AskConfiguration(game_settings_t *game){
-	bool x;
-	x=AskPlayer(game);
+	char x;
+	char msg[]="Would you like to configure the game?\n[Y]\n[N]\n";
+	PrintScreen(msg);
+	x=ReceiveChar(4, n, N, y, Y);
 	
-	if(x){
+	if(x=='y' || x=='Y'){
 		ConfigureGame(game);	
 	}
-	else if(x==0){
+	else{
 		SnakeGame(game);
 		UpdateScore(game);
-	}
-	else{
-		//funcion que imprime 
-		AskConfiguration(game);
 	}
 }
 
@@ -452,7 +455,21 @@ void ConfigureGame(game_settings_t *game){
 }
 
 
-
+bool PlayAgain(game_settings_t *game){
+	char x;
+	bool flag=0;
+	char msg[]="Do you wanna play again?\n[Y]\n[N]\n"
+	PrintScreen(msg);
+	x=ReceiveChar(4, y, Y, n, N);
+	cleaning();
+	if(x=='n' || x=='N'){
+		flag=0;
+	}
+	else{
+		flag=1;
+	}
+	return flag;
+}
 
 
 
