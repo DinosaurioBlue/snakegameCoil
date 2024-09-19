@@ -444,7 +444,7 @@ void AskConfiguration(game_settings_t *game){
 		ConfigureGame(game);	
 	}
 	else{
-		SnakeGame(game);
+		GameLoop(game);
 		UpdateScore(game);
 	}
 }
@@ -453,7 +453,7 @@ void AskConfiguration(game_settings_t *game){
 
 void ConfigureGame(game_settings_t *game){
 	ConfigurationPlayer(game);
-	SnakeGame(game);
+	GameLoop(game);
 	UpdateScore(game);
 }
 
