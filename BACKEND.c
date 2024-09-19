@@ -165,7 +165,8 @@ void MoveSnake(snake_t * snake, game_settings_t * game, bool * gameOver){
 		break;
 	default:
 		break;
-	}
+
+}
 
 
 
