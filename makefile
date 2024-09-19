@@ -1,5 +1,5 @@
-snake: main.o snake.o menu.o score.o 
-	gcc -Wall -o snake main.o snake.o menu.o score.o  -lncurses
+snake: main.o FRONTEND.o BACKEND.o 
+	gcc -Wall -o snake main.o FRONTEND.o BACKEND.o  -lncurses
 
 main.o: main.c snake.h score.h menu.h
 	gcc -Wall -c main.c
