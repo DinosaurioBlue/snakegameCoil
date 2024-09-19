@@ -4,7 +4,8 @@
 //general inlcudes
 #include"GENERAL.h"
 #include"BACKEND.h"
-
+#include<stdlib.h>
+#include<unistd.h>
 
 //conditional compilation
 #ifdef WINDOWS
@@ -28,7 +29,15 @@ void GoToxy(int x, int y);//definition of funciton
 #define SNAKE_BODY 'O'
 #define FRUIT_CH 'F'
 #define BORDER_CHAR '#'
-
+#define MIN_SNAKE 1
+#define MAX_SNAKE 15
+#define MIN_LIFE 1
+#define MAX_LIFE 5
+#define MIN_TIME 50
+#define MAX_TIME 300
+#define MIN_SIZE 50
+#define MAX_SIZE 300
+#define INVALID_INPUT 0
 
 
 
@@ -145,6 +154,8 @@ input_t GetInput(void){
     default:    ch = ERR;   break;
     }
     } while (ch != ERR);
+    
+    return INVALID_INPUT;
 }
 
 void CleanStdin(void){
@@ -190,6 +201,7 @@ void PrintScreen(const char *string){
 //function for the user to press ENTER
 void ReceiveEnter(void){
 	int temp=0;
+	char x;
 	while(!temp){
 		x = getchar();
 		if(x==('\n')){
@@ -197,7 +209,7 @@ void ReceiveEnter(void){
 		}
 		else{
 			printf("Please press ENTER\n");
-			cleanStdin();
+			CleanStdin();
 		}
 	}
 }
@@ -205,14 +217,14 @@ void ReceiveEnter(void){
 
 //function to receive specific chars from user
 char ReceiveChar(int num_chars, ...){
-	int temp=0, i;
+	int temp=0;
 	char x, valid_char;
 	
 	va_list args;
 	
 	while(!temp){
 		x=getchar();
-		cleanStdin();
+		CleanStdin();
 		
 		va_start(args, num_chars);
 		
@@ -264,10 +276,10 @@ void startGame(game_settings_t * game){
 		}
 		else{
 			printf("Please press ENTER\n");
-			cleanStdin();
+			CleanStdin();
 		}
 	}
-	checkPlayer(game);
+	CheckPlayer(game);
 
 
 
@@ -275,9 +287,10 @@ void startGame(game_settings_t * game){
 
 //function that prints the player with their score in descending order
 void PrintTopscores(game_settings_t *game, int cantPlayers){
+	int i;
 	printf("TOP SCORES: \n");
-	for(i=0; i<cantPlayes; i++){
-		printf("%s  ->  %d\n", game->username, game->score);
+	for(i=0; i<cantPlayers; i++){
+		printf("%s  ->  %d\n", game->userName, game->score);
 	}
 	printf("\n\nPress ENTER to exit\n");
 	ReceiveEnter();		
@@ -306,7 +319,7 @@ void ConfigurationPlayer(game_settings_t * game){
 	while(!flag){
 		if(scanf("%d",&temp)!=1){
 			printf("please enter an integer from %d to %d\n",MIN_SIZE,MAX_SIZE);
-			cleanStdin();
+			CleanStdin();
 		}
 		else if((temp<MIN_SIZE)||(temp>MAX_SIZE)){
 			printf("please enter an integer from %d to %d\n",MIN_SIZE,MAX_SIZE);
@@ -323,7 +336,7 @@ void ConfigurationPlayer(game_settings_t * game){
 	while(!flag){
 		if(scanf("%d",&temp)!=1){
 			printf("please enter an integer from %d to %d\n",MIN_SIZE,MAX_SIZE);
-			cleanStdin();
+			CleanStdin();
 		}
 		else if((temp<MIN_SIZE)||(temp>MAX_SIZE)){
 			printf("please enter an integer from %d to %d\n",MIN_SIZE,MAX_SIZE);
@@ -338,7 +351,7 @@ void ConfigurationPlayer(game_settings_t * game){
 
 	//border character
 	printf("what character would you like your board to use?\n");
-	cleanStdin();
+	CleanStdin();
 	flag =0;
 	while(!flag){
 		temp = getchar();
@@ -347,17 +360,17 @@ void ConfigurationPlayer(game_settings_t * game){
 		}
 		else{
 			printf("Please enter a valid character");
-			cleanStdin();
+			CleanStdin();
 		}
 	}
-	game->boardchar = (char)(temp);	
+	game->boardChar = (char)(temp);	
 
 	//configure snake
 	
 	//snake head
 	CLEAR();
 	printf("what character would you like the head of snake to be?\n");
-	cleanStdin();
+	CleanStdin();
 	flag =0;
 	while(!flag){
 		temp = getchar();
@@ -366,14 +379,14 @@ void ConfigurationPlayer(game_settings_t * game){
 		}
 		else{
 			printf("Please enter a valid character");
-			cleanStdin();
+			CleanStdin();
 		}
 	}
 	game->snakeHead = (char)(temp);	
 
 	//snake body
 	printf("what character would you like the body of snake to be?\n");
-	cleanStdin();
+	CleanStdin();
 	flag =0;
 	while(!flag){
 		temp = getchar();
@@ -382,7 +395,7 @@ void ConfigurationPlayer(game_settings_t * game){
 		}
 		else{
 			printf("Please enter a valid character");
-			cleanStdin();
+			CleanStdin();
 		}
 	}
 	game->snakeBody= (char)(temp);
@@ -393,7 +406,7 @@ void ConfigurationPlayer(game_settings_t * game){
 	while(!flag){
 		if(scanf("%d",&temp)!=1){
 			printf("please enter an integer from %d to %d\n",MIN_SNAKE,MAX_SNAKE);
-			cleanStdin();
+			CleanStdin();
 		}
 		else if((temp<MIN_SNAKE)||(temp>MAX_SNAKE)){
 			printf("please enter an integer from %d to %d\n",MIN_SNAKE,MAX_SNAKE);
@@ -410,7 +423,7 @@ void ConfigurationPlayer(game_settings_t * game){
 	//food apearrence
 	CLEAR();
 	printf("what character would you like the food to be?\n");
-	cleanStdin();
+	CleanStdin();
 	flag =0;
 	while(!flag){
 		temp = getchar();
@@ -419,7 +432,7 @@ void ConfigurationPlayer(game_settings_t * game){
 		}
 		else{
 			printf("Please enter a valid character");
-			cleanStdin();
+			CleanStdin();
 		}
 	}
 	game->fruitCh= (char)(temp);
@@ -432,7 +445,7 @@ void ConfigurationPlayer(game_settings_t * game){
 	while(!flag){
 		if(scanf("%d",&temp)!=1){
 			printf("please enter an integer from %d to %d\n",MIN_LIFE,MAX_LIFE);
-			cleanStdin();
+			CleanStdin();
 		}
 		else if((temp<MIN_LIFE)||(temp>MAX_LIFE)){
 			printf("please enter an integer from %d to %d\n",MIN_LIFE,MAX_LIFE);
@@ -449,7 +462,7 @@ void ConfigurationPlayer(game_settings_t * game){
 	while(!flag){
 		if(scanf("%d",&temp)!=1){
 			printf("please enter an integer from %d to %d\n",MIN_TIME,MAX_TIME);
-			cleanStdin();
+			CleanStdin();
 		}
 		else if((temp<MIN_TIME)||(temp>MAX_TIME)){
 			printf("please enter an integer from %d to %d\n",MIN_TIME,MAX_TIME);
@@ -461,7 +474,7 @@ void ConfigurationPlayer(game_settings_t * game){
 	}
 	CLEAR();
 	game->configured=1;
-	cleanStdin();		
+	CleanStdin();		
 }
 
 
@@ -481,7 +494,7 @@ void EndGame(game_settings_t * game){//end messagge and deallocates memory
     refresh();
     curs_set(1);
     #endif
-	SLEEP(2000);
+	sleep(2000);
 	CLEAR();
     
 

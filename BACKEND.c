@@ -6,12 +6,13 @@
 #include"FRONTEND.h"
 #include<stdlib.h>
 #include<time.h>
+#include<string.h>
 
 
 
 
 
-/*//conditional compilation
+//conditional compilation
 #ifdef WINDOWS
 #define SLEEP(t) (sleep((t)))
 #include<conio.h>
@@ -19,7 +20,10 @@
 #else
 #define SLEEP(t) (napms((t)))
 #include<ncurses.h>
-#endif*/
+#include<termios.h>
+#define CLEANING() system("clear")//termios.h
+#define CLEAR() clear()//ncurses.h
+#endif
 
 
 
@@ -126,7 +130,7 @@ void SpawnFruit(game_settings_t *game) {
     game->fruitCoord.y= rand() % game->boardWidth+1;
 }
 
-void MoveSnake(snake_t * snake, game_settings_t * game, int * gameOver){
+void MoveSnake(snake_t * snake, game_settings_t * game, bool * gameOver){
 
 	input_t direction = GetInput();//receiving a direction
 	switch (direction)
@@ -153,7 +157,8 @@ void MoveSnake(snake_t * snake, game_settings_t * game, int * gameOver){
 		break;
 	case QUIT: *gameOver = 1;
 		break;
-	case PAUSE: while(GetInput()!=PAUSE);
+	case PAUSE: 
+		while(GetInput()!=PAUSE);
 		break;
 	case RESTART:{ 
 			game->restarted =1;
@@ -191,18 +196,18 @@ snake->pos=(vector_t*)realloc(snake->pos,snake->length*sizeof(vector_t));
     }
 
 }
-void CheckCollision(snake_t *snake, game_settings_t *game, int * gameOver) {
+void CheckCollision(snake_t *snake, game_settings_t *game, bool * gameOver) {
 
     // Check for wall collisions
     if(snake->pos[0].x <= 0 || snake->pos[0].x >= game->boardWidth + 1 ||
        snake->pos[0].y <= 0 || snake->pos[0].y >= game->boardHeight + 1) {
-        HasColide(game, snake, gameOver);
+        HasCollide(game, snake, gameOver);
     }
 
     // Check for self-collision
     for(int i = 1; i < snake->length; i++) {
         if(snake->pos[0].x == snake->pos[i].x && snake->pos[0].y == snake->pos[i].y) {
-            Hascollide(game, snake, gameOver);
+            HasCollide(game, snake, gameOver);
         }
     }
 
@@ -214,7 +219,7 @@ void CheckCollision(snake_t *snake, game_settings_t *game, int * gameOver) {
 
 
 }
-void HasCollide(game_settings_t * game, snake_t * snake, int * gameOver){
+void HasCollide(game_settings_t * game, snake_t * snake, bool * gameOver){
 
      if(game->life>1){//checks if you sill have lifes and sets the snake as new
             --(game->life);
@@ -263,7 +268,6 @@ void TimeScoreInc(game_settings_t * game){//updating score regarding timestep
 
 //function that starts the menu
 void StartMenu(game_settings_t *game){
-	char x;
 	game->configured = 0;
 	char msg[]="SNAKE GAME  \nPress ENTER to start...\n";
 	PrintScreen(msg);
@@ -279,17 +283,17 @@ void CheckPlayer(game_settings_t *game){
 	char msg[]=("[T] TOP SCORES\n[L] LOG IN\n[S] SIGN IN\n");
 	char x;	
 	PrintScreen(msg);
-	x=ReceiveChar(6, l, L, s, S, t, T);
+	x=ReceiveChar(6, 'l', 'L', 's', 'S', 't', 'T');
 	if(x == 'l' || x == 'L'){
-		cleanStdin();
+		CleanStdin();
 		LoginPlayer(game);
 	}
 	else if(x == 's' || x == 'S'){
-		cleanStdin();
+		CleanStdin();
 		SignupPlayer(game);
 	}
 	else{
-		cleanStdin();
+		CleanStdin();
 		TopScores(game);		
 	}
 	AskConfiguration(game);
@@ -333,8 +337,8 @@ void SignupPlayer(game_settings_t *game){
 		fclose(pFile);//closes the file 
 	}
 	else{
-		cleaning();
-		msg[]= ("Name already used. Try again!\n");
+		CLEANING();
+		strcpy(msg, "Name already used. Try again!\n");
 		PrintScreen(msg);
 		CheckPlayer(game);
 	}
@@ -348,14 +352,14 @@ void SignupPlayer(game_settings_t *game){
 void LoginPlayer(game_settings_t *game){
 	char buffer[500]; 
 	int log = 0;
-	char msg[];
+	char msg[100];
 	FILE *ptr = fopen("history.txt", "r");
 	
 	if(ptr == NULL){
 		perror("Error opening file");
 	} 
 	else{
-		msg[]="Enter yout username: ";
+		strcpy(msg, "Enter yout username: ");
 		PrintScreen(msg);
 		ReceiveStr(game->userName);
 				
@@ -369,12 +373,12 @@ void LoginPlayer(game_settings_t *game){
 		fclose(ptr);
 	}
 	if(log){
-		msg[]="Welcome back!\n";
+		strcpy(msg, "Welcome back!\n");
 		PrintScreen(msg); 
 		AskConfiguration(game);
 	}
 	else{
-		msg[]="User not found. Try again!\n";
+		strcpy(msg, "User not found. Try again!\n");
 		PrintScreen(msg);
 		CheckPlayer(game);
 	}
@@ -385,10 +389,10 @@ void LoginPlayer(game_settings_t *game){
 void TopScores(game_settings_t *game){
 	char *score;
 	char buffer[500];
-	int count = 0, i, x;
+	int count = 0;
 	FILE *pScan = fopen("history.txt", "r");
 	
-	cleaning();
+	CLEANING();
 	if(pScan == NULL){
 		perror("Error opening file");
 	} 	
@@ -398,11 +402,11 @@ void TopScores(game_settings_t *game){
 		game->userName = strstr(buffer, "USER:");
 		game->score = strstr(buffer, "SCORE:");
 		
-		if(game->userName != NULL && game->score!= NULL) {
+		if(game->userName != NULL && game->score!= 0) {
 		//copies the name of the player. USER: = 5. Sets the pointer to the first character of the name
 			sscanf(game->userName + 5, "%s", game->userName); 
 			//copies the score of the player. SCORE: = 6. Sets the pointer to the number 
-			sscanf(score + 6, "%d", game->score);
+			sscanf(game->score + 6, "%d", &(game->score));
 			count++;
 		}
 	}	
@@ -412,7 +416,7 @@ void TopScores(game_settings_t *game){
 	//sort players by score
 	qsort(game->userName, count, sizeof(game_settings_t), ComparePlayer);
 	
-	PrintTopScores(game, count);
+	PrintTopscores(game, count);
 }
 
 
@@ -434,7 +438,7 @@ void AskConfiguration(game_settings_t *game){
 	char x;
 	char msg[]="Would you like to configure the game?\n[Y]\n[N]\n";
 	PrintScreen(msg);
-	x=ReceiveChar(4, n, N, y, Y);
+	x=ReceiveChar(4, 'n', 'N', 'y', 'Y');
 	
 	if(x=='y' || x=='Y'){
 		ConfigureGame(game);	
@@ -448,11 +452,48 @@ void AskConfiguration(game_settings_t *game){
 
 
 void ConfigureGame(game_settings_t *game){
-	int flag=0, temp;
 	ConfigurationPlayer(game);
 	SnakeGame(game);
 	UpdateScore(game);
 }
+
+
+void UpdateScore(game_settings_t *game){
+	char buffer[200];
+	char *scorePosition;
+	int old_score;
+	int score = game->score;
+	unsigned long int position;
+	FILE *pChange = fopen("history.txt", "r+");
+	
+	if(pChange == NULL){
+		perror("Failed to open file");
+	}
+	
+//Read each line and update the player's score if it's higher than the old one
+	while(fgets(buffer, sizeof(buffer), pChange) != NULL){
+		if(strstr(buffer, game->userName) != NULL){
+			scorePosition = strstr(buffer, "SCORE:");
+			if(scorePosition){ 
+			//reads the player's old score
+				sscanf(scorePosition + 6 , "%d", &old_score); 
+				if(score > old_score){  
+					position = ftell(pChange);  
+					//sets the pointer in the right position to change the player's score
+					fseek(pChange, position - strlen(buffer) + (scorePosition - buffer) + 6, SEEK_SET);
+					//changes to new score
+					fprintf(pChange, "%-4d\n", score);
+				}	
+			}
+		}
+	}
+	
+	fclose(pChange);
+}
+	
+
+
+
 
 
 bool PlayAgain(game_settings_t *game){
@@ -460,8 +501,8 @@ bool PlayAgain(game_settings_t *game){
 	bool flag=0;
 	char msg[]=("Do you wanna play again?\n[Y]\n[N]\n");
 	PrintScreen(msg);
-	x=ReceiveChar(4, y, Y, n, N);
-	cleaning();
+	x=ReceiveChar(4, 'y', 'Y', 'n', 'N');
+	CLEANING();
 	if(x=='n' || x=='N'){
 		flag=0;
 	}
