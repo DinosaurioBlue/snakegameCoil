@@ -481,7 +481,7 @@ void ConfigurationPlayer(game_settings_t * game){
 
 /***********************************************************
 *														   *
-*                function to en the game                   *
+*                function to end the game                   *
 * 														   *
 ***********************************************************/
 void EndGame(game_settings_t * game){//end messagge and deallocates memory
