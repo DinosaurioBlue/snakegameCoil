@@ -151,11 +151,10 @@ input_t GetInput(void){
     case 'P':   return PAUSE;   break;
     case 'r':
     case 'R':   return RESTART; break;
-    default:    ch = ERR;   break;
+    default:					break;
     }
     } while (ch != ERR);
-    
-    return NO_KEY;
+	return NO_KEY;
 }
 
 void CleanStdin(void){
@@ -172,7 +171,6 @@ void SetupFront (game_settings_t * game){
     noecho();  // Don't echo input
     curs_set(0); // Hide the cursor
     nodelay(stdscr,TRUE);
-	atexit(KillScreen);  // Register KillScreen to be called on exit
     #endif
 
 

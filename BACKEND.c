@@ -61,8 +61,6 @@ void GameLoop(game_settings_t * game){
         Draw(game, p2snake);
 		TimeScoreInc(game);
 		SLEEP(game->timeStep);
-
-
     }
 	FreeMem(snake.pos);
     EndGame(game);

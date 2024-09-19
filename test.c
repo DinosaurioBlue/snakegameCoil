@@ -11,9 +11,6 @@ int main (void){
     
     //calling to game loop
     GameLoop(game);
-    SetupBack(game);
-    SetupFront(game);
-    endwin();
     printf("The game finished perfectly\n");
     getchar();
 

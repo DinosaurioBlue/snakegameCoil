@@ -30,7 +30,8 @@ typedef enum{
     PAUSE,
     RESTART,
     NO_KEY,
-    QUIT
+    QUIT,
+    WRONG_KEY
 } input_t;
 
 
