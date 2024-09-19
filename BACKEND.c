@@ -387,7 +387,6 @@ void LoginPlayer(game_settings_t *game){
 
 //Function to display players in order from the highiest score to the lowest
 void TopScores(game_settings_t *game){
-	char *score;
 	char buffer[500];
 	int count = 0;
 	FILE *pScan = fopen("history.txt", "r");
@@ -400,13 +399,13 @@ void TopScores(game_settings_t *game){
 	while(fgets(buffer, sizeof(buffer), pScan) != NULL){
 		//set pointers to the user part and the score part
 		game->userName = strstr(buffer, "USER:");
-		game->score = strstr(buffer, "SCORE:");
+		char *scorePtr = strstr(buffer, "SCORE:");
 		
-		if(game->userName != NULL && game->score!= 0) {
+		if(game->userName != NULL && scorePtr!= NULL) {
 		//copies the name of the player. USER: = 5. Sets the pointer to the first character of the name
 			sscanf(game->userName + 5, "%s", game->userName); 
 			//copies the score of the player. SCORE: = 6. Sets the pointer to the number 
-			sscanf(game->score + 6, "%d", &(game->score));
+			sscanf(scorePtr + 6, "%d", &(game->score));
 			count++;
 		}
 	}	
