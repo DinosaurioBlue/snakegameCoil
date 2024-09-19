@@ -283,7 +283,7 @@ void startGame(game_settings_t * game){
 
 
 
-
+}
 
 //function that prints the player with their score in descending order
 void PrintTopscores(game_settings_t *game, int cantPlayers){
@@ -297,8 +297,8 @@ void PrintTopscores(game_settings_t *game, int cantPlayers){
 	//then goes to menu again 
 	CLEAR();
 	CheckPlayer(game);
-	}
 }
+
 
 
 
