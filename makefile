@@ -13,6 +13,12 @@ menu.o: menu.c menu.h
 score.o: score.c score.h
 	gcc -Wall -c score.c
 
+FRONTEND.o: FRONTEND.c FRONTEND.h
+	gcc -Wall -c FRONTEND.c
+
+BACKEND.o: BACKEND.c BACKEND.h
+	gcc -Wall -c snake.c
+
 clean:
 	rm -rf *.o 
 	rm snake

@@ -269,14 +269,14 @@ void StartMenu(game_settings_t *game){
 	PrintScreen(msg);
 	ReceiveEnter();		
 	CheckPlayer(game);
-	}
 }
+
 
 
 
 //function that goes to the selected option of the menu
 void CheckPlayer(game_settings_t *game){
-	char msg[]="[T] TOP SCORES\n[L] LOG IN\n[S] SIGN IN\n");
+	char msg[]=("[T] TOP SCORES\n[L] LOG IN\n[S] SIGN IN\n");
 	char x;	
 	PrintScreen(msg);
 	x=ReceiveChar(6, l, L, s, S, t, T);
@@ -303,7 +303,7 @@ void SignupPlayer(game_settings_t *game){
 	int found = 0;
 	FILE* pFile;//pointer to a file
 	FILE* ptrCheck;
-	char msg[]="Enter your name: ";
+	char msg[100]="Enter your name: ";
 	PrintScreen(msg);
 	ReceiveStr(game->userName);
 		
@@ -334,7 +334,7 @@ void SignupPlayer(game_settings_t *game){
 	}
 	else{
 		cleaning();
-		msg[]="Name already used. Try again!\n";
+		msg[]= ("Name already used. Try again!\n");
 		PrintScreen(msg);
 		CheckPlayer(game);
 	}
@@ -458,7 +458,7 @@ void ConfigureGame(game_settings_t *game){
 bool PlayAgain(game_settings_t *game){
 	char x;
 	bool flag=0;
-	char msg[]="Do you wanna play again?\n[Y]\n[N]\n"
+	char msg[]=("Do you wanna play again?\n[Y]\n[N]\n");
 	PrintScreen(msg);
 	x=ReceiveChar(4, y, Y, n, N);
 	cleaning();
