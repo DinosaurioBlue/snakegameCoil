@@ -1,7 +1,7 @@
 #include"GENERAL.h"
 #include"BACKEND.h"
 #include"FRONTEND.h"
-
+#include<stdio.h>
 int main (void){
     //initializing game
     game_settings_t myGame;
@@ -12,8 +12,9 @@ int main (void){
     GameLoop(game);
     SetupBack(game);
     SetupFront(game);
+    printf("The game finished perfectly\n");
+    getchar();
 
-    //need to clean ncurses mode 
-    KillScreen();
+    
     return 0;
 }

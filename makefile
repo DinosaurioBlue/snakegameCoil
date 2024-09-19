@@ -21,4 +21,4 @@ test.o: test.c BACKEND.h FRONTEND.h GENERAL.h
 clean:
 	rm -rf *.o 
 	rm snake
-	rm s
+	rm test

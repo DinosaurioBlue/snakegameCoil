@@ -6,7 +6,6 @@
 
 
 void Draw(game_settings_t* game,snake_t*snake);
-
 input_t GetInput(void);
 void CleanStdin(void);
 void SetupFront (game_settings_t * game);

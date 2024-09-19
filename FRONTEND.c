@@ -186,8 +186,10 @@ void SetupFront (game_settings_t * game){
 
 void KillScreen (void){//only at the end of ncurses mode
     #ifndef WINDOWS
+    /*nocbreak();
+    echo();
+	curs_set(1);*/
     endwin();
-    curs_set(1);
     #endif
     CLEANING();//TERMIOS CALL IF YOU ARE ON LINUX
 }
@@ -485,17 +487,20 @@ void ConfigurationPlayer(game_settings_t * game){
 * 														   *
 ***********************************************************/
 void EndGame(game_settings_t * game){//end messagge and deallocates memory
-    CLEAR();
     #ifdef WINDOWS
+	system("cls");
     GoToxy(0,0);
     printf("Game Over! Your score was %d\n", game->score);
+	sleep(2000);
+	system("cls");
     #else
+	clear();
     mvprintw(0,0,"Game Over! Your score was %d\n", game->score);
     refresh();
     curs_set(1);
+	napms(2000);
+	clear();
     #endif
-	sleep(2000);
-	CLEAR();
 	KillScreen();
     
 
