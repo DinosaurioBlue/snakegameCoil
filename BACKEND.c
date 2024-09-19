@@ -126,7 +126,8 @@ void SpawnFruit(game_settings_t *game) {
 
 void MoveSnake(snake_t * snake, game_settings_t * game, bool * gameOver){
 
-	input_t direction = GetInput();//receiving a direction
+	input_t direction;
+	while((direction= GetInput())!=NO_KEY)
 	switch (direction)
 	{
 	case UP: if (snake->dir.y != 1) {
