@@ -37,7 +37,7 @@ void GoToxy(int x, int y);//definition of funciton
 #define MAX_TIME 300
 #define MIN_SIZE 50
 #define MAX_SIZE 300
-#define INVALID_INPUT 0
+
 
 
 
@@ -85,7 +85,7 @@ void Draw(game_settings_t* game,snake_t*snake){
     }
 
     //printing fruit
-    mvprintw(game->fruitCoord.y, game->fruitCoord.x, "%C", game->fruitCh);
+    mvprintw(game->fruitY, game->fruitX, "%C", game->fruitCh);
 
 
 
@@ -155,7 +155,7 @@ input_t GetInput(void){
     }
     } while (ch != ERR);
     
-    return INVALID_INPUT;
+    return NO_KEY;
 }
 
 void CleanStdin(void){

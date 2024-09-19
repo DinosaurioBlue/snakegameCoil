@@ -17,8 +17,8 @@
 
 typedef struct
 {
-    unsigned int x;
-    unsigned int y;
+     int x;
+     int y;
 }vector_t;
 
 
@@ -46,9 +46,10 @@ typedef struct {
     unsigned int snakeLength;
     unsigned int boardHeight;
     unsigned int boardWidth;
-    vector_t fruitCoord;
+    unsigned int fruitX;
+    unsigned int fruitY;
     unsigned int timeStep;
-    _Bool configured;
+    bool configured;
     bool    restarted;
     time_t  gameTime;
 } game_settings_t;

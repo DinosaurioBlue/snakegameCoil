@@ -126,9 +126,11 @@ void InitializeSnake(snake_t *snake, game_settings_t * game) {
 
 void SpawnFruit(game_settings_t *game) {
     srand((unsigned int)time(NULL));  // Seed the random number generator
-    game->fruitCoord.x = rand() % game->boardWidth+1;
-    game->fruitCoord.y= rand() % game->boardWidth+1;
+    game->fruitX = (rand() % (game->boardWidth - 2)) + 1;  // Spawn between 1 and boardWidth - 2
+    game->fruitY = (rand() % (game->boardHeight - 2)) + 1; // Spawn between 1 and boardHeight - 2
 }
+	
+
 
 void MoveSnake(snake_t * snake, game_settings_t * game, bool * gameOver){
 
@@ -212,7 +214,7 @@ void CheckCollision(snake_t *snake, game_settings_t *game, bool * gameOver) {
     }
 
     // Check if fruit is eaten,
-    if(snake->pos[0].x == game->fruitCoord.x && snake->pos[0].y == game->fruitCoord.y) {
+    if(snake->pos[0].x == game->fruitX && snake->pos[0].y == game->fruitY) {
         Growth(game,snake);//what happens if a fruit is eaten??read below
     }
 
