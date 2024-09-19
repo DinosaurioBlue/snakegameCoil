@@ -1,7 +1,7 @@
 snake: main.o FRONTEND.o BACKEND.o 
 	gcc -Wall -o snake main.o FRONTEND.o BACKEND.o  -lncurses
 
-main.o: main.c snake.h score.h menu.h
+main.o: main.c BACKEND.H FRONTEND.H GENERAL.H
 	gcc -Wall -c main.c
 
 snake.o: snake.c snake.h
@@ -13,10 +13,10 @@ menu.o: menu.c menu.h
 score.o: score.c score.h
 	gcc -Wall -c score.c
 
-FRONTEND.o: FRONTEND.c FRONTEND.h
+FRONTEND.o: FRONTEND.c FRONTEND.h BACKEND.H GENERAL.H
 	gcc -Wall -c FRONTEND.c
 
-BACKEND.o: BACKEND.c BACKEND.h
+BACKEND.o: BACKEND.c BACKEND.h FRONTEND.H GENERAL.H
 	gcc -Wall -c snake.c
 
 clean:
