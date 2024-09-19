@@ -172,6 +172,7 @@ void SetupFront (game_settings_t * game){
     noecho();  // Don't echo input
     curs_set(0); // Hide the cursor
     nodelay(stdscr,TRUE);
+	atexit(KillScreen);  // Register KillScreen to be called on exit
     #endif
 
 
@@ -186,12 +187,12 @@ void SetupFront (game_settings_t * game){
 
 void KillScreen (void){//only at the end of ncurses mode
     #ifndef WINDOWS
-    /*nocbreak();
+    nocbreak();
     echo();
-	curs_set(1);*/
+	curs_set(1);
     endwin();
     #endif
-    CLEANING();//TERMIOS CALL IF YOU ARE ON LINUX
+    //CLEANING();//TERMIOS CALL IF YOU ARE ON LINUX
 }
 
 //functions that prints on screen 
@@ -500,8 +501,7 @@ void EndGame(game_settings_t * game){//end messagge and deallocates memory
     curs_set(1);
 	napms(2000);
 	clear();
-    #endif
+	#endif
 	KillScreen();
-    
-
+	
 }
