@@ -496,6 +496,7 @@ void EndGame(game_settings_t * game){//end messagge and deallocates memory
     #endif
 	sleep(2000);
 	CLEAR();
+	KillScreen();
     
 
 }

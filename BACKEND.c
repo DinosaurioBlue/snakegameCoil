@@ -39,7 +39,7 @@
 #define SCORE_TIME_INC 1
 #define SCORE_EATING 10
 #define SCORE_COLLIDE 10
-#define MIN_TIMESTEP 20
+#define MIN_TIMESTEP 50
 #define SPEED_INCREASMENT 20
 
 
@@ -66,13 +66,6 @@ void GameLoop(game_settings_t * game){
     }
     EndGame(game);
 	FreeMem(snake.pos);
-
-
-
-
-
-
-
 
 }
 /********************************************************************************
@@ -167,6 +160,7 @@ void MoveSnake(snake_t * snake, game_settings_t * game, bool * gameOver){
 			FreeMem(snake->pos);//we free dinamic memory, bad things could happen if not
 			SetupBack(game);//will set the snake to it's initial setting
 			InitializeSnake(snake, game);
+			SpawnFruit(game);
 			
 		}
 		break;
@@ -228,9 +222,12 @@ void HasCollide(game_settings_t * game, snake_t * snake, bool * gameOver){
             (game->snakeLength)=SNAKE_LENGTH;
             FreeMem(snake->pos);
             InitializeSnake(snake,game);
-            if(game->score >= MIN_TIMESTEP){//this make the score not to be negative
-                game->score-=SPEED_INCREASMENT;
+            if(game->score >=SCORE_DIVIDER){//this make the score not to be negative
+                game->score-=SCORE_COLLIDE;
             }
+			else{
+				game-> score =0;
+			}
         }
         else{
             *gameOver=1;
