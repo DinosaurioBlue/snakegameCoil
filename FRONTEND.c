@@ -76,7 +76,7 @@ void Draw(game_settings_t* game,snake_t*snake){
     }
     //printing score and life
     mvprintw(game->boardHeight+4,0,"your score is:%d",game->score);
-    mvprintw(game->boardHeight+5,0,"your lifes are:%d",game->life);
+    mvprintw(game->boardHeight+5,0,"your lives are:%d",game->life);
 
     //printing snake
     mvprintw(snake->pos[0].y,snake->pos[0].x,"%C",game->snakeHead);

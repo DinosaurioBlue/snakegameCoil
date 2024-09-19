@@ -29,7 +29,7 @@
 
 //default settings
 #define SNAKE_LENGTH 1
-#define LIFE 10
+#define LIFE 3
 #define BOARD_HEIGHT 20
 #define BOARD_WIDTH 30
 #define TIMESTEP 200
