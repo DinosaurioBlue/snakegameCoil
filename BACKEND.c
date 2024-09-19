@@ -11,7 +11,7 @@
 
 
 
-//conditional compilation
+/*//conditional compilation
 #ifdef WINDOWS
 #define SLEEP(t) (sleep((t)))
 #include<conio.h>
@@ -19,7 +19,7 @@
 #else
 #define SLEEP(t) (napms((t)))
 #include<ncurses.h>
-#endif
+#endif*/
 
 
 

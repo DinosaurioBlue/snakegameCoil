@@ -91,7 +91,9 @@
     "streambuf": "c",
     "tuple": "c",
     "typeinfo": "c",
-    "utility": "c"
+    "utility": "c",
+    "general.h": "c",
+    "frontend.h": "c"
   },
   "makefile.configureOnOpen": false
 }
