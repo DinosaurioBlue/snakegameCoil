@@ -41,7 +41,14 @@
 #define SCORE_COLLIDE 10
 #define MIN_TIMESTEP 50
 #define SPEED_INCREASMENT 20
+#define MAX_PLAYERS 100
 
+
+//define new structure
+typedef struct {
+    char userName[NAME_MAX];
+    int score;
+} player_t;
 
 /*THIS WORKS AS MAIN GAME LOOP*///Game loop
 
@@ -127,48 +134,47 @@ void SpawnFruit(game_settings_t *game) {
 void MoveSnake(snake_t * snake, game_settings_t * game, bool * gameOver){
 
 	input_t direction;
-	while((direction= GetInput())!=NO_KEY){
-		switch (direction){
-			case UP: if (snake->dir.y != 1) {
-					snake->dir.x = 0;
-					snake->dir.y = -1;
-				}
-				break;
-			case DOWN: if (snake->dir.y != -1) {
-					snake->dir.x = 0;
-					snake->dir.y = 1;
-				}
-				break;
-			case LEFT: if (snake->dir.x != 1) {
-					snake->dir.x = -1;
-					snake->dir.y = 0;
-				}
-				break;
-			case RIGHT: if (snake->dir.x != -1) {
-					snake->dir.x = 1;
-					snake->dir.y = 0;
-				}
-				break;
-			case QUIT: *gameOver = 1;
-				break;
-			case PAUSE: 
-				while(GetInput()!=PAUSE);
-				break;
-			case RESTART:{ 
-					game->restarted =1;
-					FreeMem(snake->pos);//we free dinamic memory, bad things could happen if not
-					SetupBack(game);//will set the snake to it's initial setting
-					InitializeSnake(snake, game);
-					SpawnFruit(game);
-					
-				}
-				break;
-			default:
-				break;
-
+	while((direction= GetInput())!=NO_KEY)
+	switch (direction)
+	{
+	case UP: if (snake->dir.y != 1) {
+            snake->dir.x = 0;
+            snake->dir.y = -1;
+        }
+		break;
+	case DOWN: if (snake->dir.y != -1) {
+            snake->dir.x = 0;
+            snake->dir.y = 1;
+        }
+		break;
+	case LEFT: if (snake->dir.x != 1) {
+            snake->dir.x = -1;
+            snake->dir.y = 0;
+        }
+		break;
+	case RIGHT: if (snake->dir.x != -1) {
+            snake->dir.x = 1;
+            snake->dir.y = 0;
+        }
+		break;
+	case QUIT: *gameOver = 1;
+		break;
+	case PAUSE: 
+		while(GetInput()!=PAUSE);
+		break;
+	case RESTART:{ 
+			game->restarted =1;
+			FreeMem(snake->pos);//we free dinamic memory, bad things could happen if not
+			SetupBack(game);//will set the snake to it's initial setting
+			InitializeSnake(snake, game);
+			SpawnFruit(game);
+			
 		}
-	}
-	
+		break;
+	default:
+		break;
+
+}
 
 
 
@@ -268,36 +274,37 @@ void TimeScoreInc(game_settings_t * game){//updating score regarding timestep
 
 
 //function that starts the menu
-void StartMenu(game_settings_t *game){
+int StartMenu(game_settings_t *game){
 	game->configured = 0;
 	char msg[]="SNAKE GAME  \nPress ENTER to start...\n";
 	PrintScreen(msg);
 	ReceiveEnter();		
-	CheckPlayer(game);
+	return 0;
 }
 
 
 
 
 //function that goes to the selected option of the menu
-void CheckPlayer(game_settings_t *game){
+int CheckPlayer(game_settings_t *game){
 	char msg[]=("[T] TOP SCORES\n[L] LOG IN\n[S] SIGN IN\n");
 	char x;	
 	PrintScreen(msg);
 	x=ReceiveChar(6, 'l', 'L', 's', 'S', 't', 'T');
 	if(x == 'l' || x == 'L'){
-		CleanStdin();
+		CLEANING();
 		LoginPlayer(game);
 	}
 	else if(x == 's' || x == 'S'){
-		CleanStdin();
+		CLEANING();
 		SignupPlayer(game);
 	}
 	else{
-		CleanStdin();
-		TopScores(game);		
+		CLEANING();
+		TopScores(game);
 	}
 	AskConfiguration(game);
+	return 0;
 }
 
 
@@ -310,6 +317,13 @@ void SignupPlayer(game_settings_t *game){
 	FILE* ptrCheck;
 	char msg[100]="Enter your name: ";
 	PrintScreen(msg);
+	
+	game->userName = malloc(NAME_MAX * sizeof(char));
+    if (game->userName == NULL) {
+        perror("Failed to allocate memory for username");
+        exit(EXIT_FAILURE);
+       }
+	
 	ReceiveStr(game->userName);
 		
 	ptrCheck = fopen("history.txt", "r");//pointer to check if the username already exists
@@ -322,6 +336,7 @@ void SignupPlayer(game_settings_t *game){
 		//stores the text that reads in the .txt and then compares it to the player's name 
 			if(strstr(trash, game->userName) != NULL){
 				found = 1;//user found
+				break;
 			}
 		}
 		fclose(ptrCheck);
@@ -344,12 +359,13 @@ void SignupPlayer(game_settings_t *game){
 		CheckPlayer(game);
 	}
 	AskConfiguration(game);
+	free(game->userName);//free allocated memory
 
 }
 
 
 
-
+//function for a player that has already played to log in 
 void LoginPlayer(game_settings_t *game){
 	char buffer[500]; 
 	int log = 0;
@@ -362,33 +378,45 @@ void LoginPlayer(game_settings_t *game){
 	else{
 		strcpy(msg, "Enter yout username: ");
 		PrintScreen(msg);
+		
+		game->userName = malloc(NAME_MAX * sizeof(char)); 
+        if (game->userName == NULL) {
+            perror("Failed to allocate memory for username");
+            exit(EXIT_FAILURE);
+        }
+        
 		ReceiveStr(game->userName);
 				
 		while(fgets(buffer, sizeof(buffer), ptr) != NULL){
 			//stores the text that reads in the .txt and then compares it to the player name 
 			if(strstr(buffer, game->userName) != NULL){
 				log = 1;//user found
+				break;
 			}
 		}
 		
 		fclose(ptr);
 	}
 	if(log){
+		CLEANING();
 		strcpy(msg, "Welcome back!\n");
 		PrintScreen(msg); 
 		AskConfiguration(game);
 	}
 	else{
+		CLEANING();
 		strcpy(msg, "User not found. Try again!\n");
 		PrintScreen(msg);
 		CheckPlayer(game);
 	}
+	free(game->userName);//free allocated memory
 }
 
 
 //Function to display players in order from the highiest score to the lowest
 void TopScores(game_settings_t *game){
 	char buffer[500];
+	player_t players[MAX_PLAYERS];
 	int count = 0;
 	FILE *pScan = fopen("history.txt", "r");
 	
@@ -399,14 +427,14 @@ void TopScores(game_settings_t *game){
 	
 	while(fgets(buffer, sizeof(buffer), pScan) != NULL){
 		//set pointers to the user part and the score part
-		game->userName = strstr(buffer, "USER:");
+		char *userPtr = strstr(buffer, "USER:");
 		char *scorePtr = strstr(buffer, "SCORE:");
 		
-		if(game->userName != NULL && scorePtr!= NULL) {
+		if(userPtr != NULL && scorePtr!= NULL) {
 		//copies the name of the player. USER: = 5. Sets the pointer to the first character of the name
-			sscanf(game->userName + 5, "%s", game->userName); 
+			sscanf(userPtr + 5, "%s", players[count].userName); 
 			//copies the score of the player. SCORE: = 6. Sets the pointer to the number 
-			sscanf(scorePtr + 6, "%d", &(game->score));
+			sscanf(scorePtr + 6, "%d", &players[count].score);
 			count++;
 		}
 	}	
@@ -414,7 +442,7 @@ void TopScores(game_settings_t *game){
 	
 	
 	//sort players by score
-	qsort(game->userName, count, sizeof(game_settings_t), ComparePlayer);
+	qsort(players, count, sizeof(player_t), ComparePlayer);
 	
 	PrintTopscores(game, count);
 }
@@ -422,11 +450,9 @@ void TopScores(game_settings_t *game){
 
 //function to compare two elements (scores) to use qsort function 
 int ComparePlayer(const void *a, const void *b) {
-    // Cast the pointers to game_settings_t
-    game_settings_t *playerA = (game_settings_t *)a;
-    game_settings_t *playerB = (game_settings_t *)b;
-
-    // Compare scores in descending order (higher score first)
+    // Cast the pointers 
+    const player_t *playerA = (const player_t *)a;
+    const player_t *playerB = (const player_t *)b;
     return playerB->score - playerA->score;
 }
 
@@ -434,20 +460,34 @@ int ComparePlayer(const void *a, const void *b) {
 
 
 //function that determines whether the playes wants to configure the game or not  
-void AskConfiguration(game_settings_t *game){
+bool AskConfiguration(game_settings_t *game){
 	char x;
+	bool y;
 	char msg[]="Would you like to configure the game?\n[Y]\n[N]\n";
 	PrintScreen(msg);
 	x=ReceiveChar(4, 'n', 'N', 'y', 'Y');
 	
 	if(x=='y' || x=='Y'){
+		CLEANING();
 		ConfigureGame(game);	
 	}
 	else{
+		CLEANING();
 		GameLoop(game);
 		UpdateScore(game);
 	}
-}
+	return 0;
+}		/*y=PlayAgain(game);
+		if(y){
+			GameLoop(game);
+			UpdateScore(game);
+			CLEANING();
+		}
+		else{
+    		EndGame(game);
+    	}		
+	}
+}*/
 
 
 

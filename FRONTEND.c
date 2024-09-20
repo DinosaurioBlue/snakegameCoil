@@ -35,8 +35,8 @@ void GoToxy(int x, int y);//definition of funciton
 #define MAX_LIFE 5
 #define MIN_TIME 50
 #define MAX_TIME 300
-#define MIN_SIZE 50
-#define MAX_SIZE 300
+#define MIN_SIZE 4
+#define MAX_SIZE 64
 
 
 
@@ -485,7 +485,7 @@ void ConfigurationPlayer(game_settings_t * game){
 *                function to end the game                   *
 * 														   *
 ***********************************************************/
-void EndGame(game_settings_t * game){//end messagge and deallocates memory
+int EndGame(game_settings_t * game){//end messagge and deallocates memory
     #ifdef WINDOWS
 	system("cls");
     GoToxy(0,0);
@@ -501,5 +501,6 @@ void EndGame(game_settings_t * game){//end messagge and deallocates memory
 	clear();
 	#endif
 	KillScreen();
+	return 0;
 	
 }
