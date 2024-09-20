@@ -273,14 +273,7 @@ void TimeScoreInc(game_settings_t * game){//updating score regarding timestep
 
 
 
-//function that starts the menu
-int StartMenu(game_settings_t *game){
-	game->configured = 0;
-	char msg[]="SNAKE GAME  \nPress ENTER to start...\n";
-	PrintScreen(msg);
-	ReceiveEnter();		
-	return 0;
-}
+
 
 
 
@@ -303,7 +296,6 @@ int CheckPlayer(game_settings_t *game){
 		CLEANING();
 		TopScores(game);
 	}
-	AskConfiguration(game);
 	return 0;
 }
 
@@ -537,17 +529,15 @@ void UpdateScore(game_settings_t *game){
 
 
 bool PlayAgain(game_settings_t *game){
+	CleanStdin();
 	char x;
-	bool flag=0;
+	bool flag=1;
 	char msg[]=("Do you wanna play again?\n[Y]\n[N]\n");
 	PrintScreen(msg);
 	x=ReceiveChar(4, 'y', 'Y', 'n', 'N');
 	CLEANING();
 	if(x=='n' || x=='N'){
 		flag=0;
-	}
-	else{
-		flag=1;
 	}
 	return flag;
 }

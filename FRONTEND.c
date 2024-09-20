@@ -501,6 +501,13 @@ int EndGame(game_settings_t * game){//end messagge and deallocates memory
 	clear();
 	#endif
 	KillScreen();
+	while(PlayAgain(game)){
+		GameLoop(game);
+	}
+
+
+
+
 	return 0;
 	
 }

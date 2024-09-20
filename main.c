@@ -6,6 +6,6 @@ int main() {
     game_settings_t game;//instancia
 
     startGame(&game);
-    getchar();
+    printf("El juego termino bien\n");
 }
 
