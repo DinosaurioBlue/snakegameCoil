@@ -20,11 +20,11 @@ void TimeScoreInc(game_settings_t * game);
 //menu functions
 int StartMenu(game_settings_t *game);
 int CheckPlayer(game_settings_t *game);
-int SignupPlayer(game_settings_t *game);
-int LoginPlayer(game_settings_t *game);
+void SignupPlayer(game_settings_t *game);
+void LoginPlayer(game_settings_t *game);
 void TopScores(game_settings_t *game);
 int ComparePlayer(const void * a, const void * b);
-int AskConfiguration(game_settings_t *game);
+bool AskConfiguration(game_settings_t *game);
 void ConfigureGame(game_settings_t *game);
 void UpdateScore(game_settings_t *game);
 bool PlayAgain(game_settings_t *game);
