@@ -27,7 +27,7 @@ int ComparePlayer(const void * a, const void * b);
 bool AskConfiguration(game_settings_t *game);
 void ConfigureGame(game_settings_t *game);
 void UpdateScore(game_settings_t *game);
-bool PlayAgain(game_settings_t *game);
+bool PlayAgain(void);
 
 #endif
 

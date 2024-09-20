@@ -36,6 +36,7 @@ typedef enum{
 
 
 
+//define new structure
 typedef struct {
     char * userName;
     char snakeHead;
@@ -55,6 +56,12 @@ typedef struct {
     time_t  gameTime;
 } game_settings_t;
 
+
+#define NAME_MAX 50
+typedef struct {
+    char userName[NAME_MAX];
+    int score;
+} player_t;
 
 
 

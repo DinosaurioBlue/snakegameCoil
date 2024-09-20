@@ -24,7 +24,6 @@ void GoToxy(int x, int y);//definition of funciton
 
 
 //defines
-#define NAME_MAX 50
 #define SNAKE_HEAD '@'
 #define SNAKE_BODY 'O'
 #define FRUIT_CH 'F'
@@ -287,11 +286,11 @@ void startGame(game_settings_t * game){
 }
 
 //function that prints the player with their score in descending order
-void PrintTopscores(game_settings_t *game, int cantPlayers){
+void PrintTopscores(game_settings_t *game, player_t *player, int cantPlayers){
 	int i;
 	printf("TOP SCORES: \n");
 	for(i=0; i<cantPlayers; i++){
-		printf("%s  ->  %d\n", game->userName, game->score);
+		printf("%s  ->  %d\n", player[i].userName, player[i].score);
 	}
 	printf("\n\nPress ENTER to exit\n");
 	ReceiveEnter();		
@@ -501,7 +500,7 @@ int EndGame(game_settings_t * game){//end messagge and deallocates memory
 	clear();
 	#endif
 	KillScreen();
-	while(PlayAgain(game)){
+	while(PlayAgain()){
 		GameLoop(game);
 	}
 

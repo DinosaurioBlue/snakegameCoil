@@ -44,11 +44,6 @@
 #define MAX_PLAYERS 100
 
 
-//define new structure
-typedef struct {
-    char userName[NAME_MAX];
-    int score;
-} player_t;
 
 /*THIS WORKS AS MAIN GAME LOOP*///Game loop
 
@@ -407,7 +402,7 @@ void LoginPlayer(game_settings_t *game){
 
 //Function to display players in order from the highiest score to the lowest
 void TopScores(game_settings_t *game){
-	char buffer[500];
+/*	char buffer[500];
 	player_t players[MAX_PLAYERS];
 	int count = 0;
 	FILE *pScan = fopen("history.txt", "r");
@@ -430,13 +425,42 @@ void TopScores(game_settings_t *game){
 			count++;
 		}
 	}	
-	fclose(pScan);	
+	fclose(pScan);	*/
+	player_t player[NAME_MAX];
+	char *name;
+	char *score;
+	char buffer[500];
+	int count = 0;
+	FILE *pScan = fopen("history.txt", "r");
+	
+	CLEAR();
+	if(pScan == NULL){
+		perror("Error opening file");
+	} 	
+	
+	while(fgets(buffer, sizeof(buffer), pScan) != NULL){
+		//set pointers to the user part and the score part
+		name = strstr(buffer, "USER:");
+		score = strstr(buffer, "SCORE:");
+		
+		if(name != NULL && score!= NULL) {
+			//copies the name of the player. USER: = 5. Sets the pointer to the first character of the name
+			sscanf(name + 5, "%s", player[count].userName); 
+			//copies the score of the player. SCORE: = 6. Sets the pointer to the number 
+			sscanf(score + 6, "%d", &player[count].score);
+			count++;
+		}
+	}
+	
+	
+	
+	fclose(pScan);
 	
 	
 	//sort players by score
-	qsort(players, count, sizeof(player_t), ComparePlayer);
+	qsort(player, count, sizeof(player_t), ComparePlayer);
 	
-	PrintTopscores(game, count);
+	PrintTopscores(game, player, count);
 }
 
 
@@ -454,7 +478,6 @@ int ComparePlayer(const void *a, const void *b) {
 //function that determines whether the playes wants to configure the game or not  
 bool AskConfiguration(game_settings_t *game){
 	char x;
-	bool y;
 	char msg[]="Would you like to configure the game?\n[Y]\n[N]\n";
 	PrintScreen(msg);
 	x=ReceiveChar(4, 'n', 'N', 'y', 'Y');
@@ -469,17 +492,7 @@ bool AskConfiguration(game_settings_t *game){
 		UpdateScore(game);
 	}
 	return 0;
-}		/*y=PlayAgain(game);
-		if(y){
-			GameLoop(game);
-			UpdateScore(game);
-			CLEANING();
-		}
-		else{
-    		EndGame(game);
-    	}		
-	}
-}*/
+}		
 
 
 
@@ -528,16 +541,18 @@ void UpdateScore(game_settings_t *game){
 
 
 
-bool PlayAgain(game_settings_t *game){
-	CleanStdin();
+bool PlayAgain(void){
 	char x;
-	bool flag=1;
+	bool flag=0;
 	char msg[]=("Do you wanna play again?\n[Y]\n[N]\n");
 	PrintScreen(msg);
 	x=ReceiveChar(4, 'y', 'Y', 'n', 'N');
 	CLEANING();
 	if(x=='n' || x=='N'){
 		flag=0;
+	}
+	else{
+		flag=1;
 	}
 	return flag;
 }
